@@ -38,4 +38,13 @@ npm run preview
 
 ## デプロイ
 
-生成される `dist/` を任意の静的ホスティング（GitHub Pages, Netlify, Vercel など）へ配置してください。
+### GitHub Pages
+
+1. GitHub 上にリポジトリを作成し、このプロジェクトを `main` ブランチへプッシュします。
+2. `Settings > Pages` で **Build and deployment** を「GitHub Actions」に変更します。
+3. `main` ブランチへコミットすると `.github/workflows/deploy.yml` が自動で実行され、`dist/` が Pages に公開されます。
+4. プロジェクトページ（`https://<ユーザー名>.github.io/<リポジトリ名>/`）で公開する場合は、アクション内で自動設定される `base`/`site` を利用できるため追加設定は不要です。ユーザー/オーガニゼーションページ（`<ユーザー名>.github.io`）も同様に対応済みです。
+
+### その他のホスティング
+
+生成される `dist/` を任意の静的ホスティング（Netlify, Vercel など）へ配置してください。
