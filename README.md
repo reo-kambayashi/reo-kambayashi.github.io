@@ -1,46 +1,41 @@
-# Astro Starter Kit: Basics
+# 研究者用HP（Astro 単一ページ最小構成）
 
-```sh
-npm create astro@latest -- --template basics
+Astroで作った“1ファイルだけ”の研究者向けHPです。編集は `src/pages/index.astro` のみで完結します。
+
+## セットアップ
+
+1. Node.js 18以上を用意します。
+2. 依存関係をインストール:
+   ```bash
+   npm install
+   ```
+3. 開発サーバを起動:
+   ```bash
+   npm run dev
+   ```
+   既定では http://localhost:4321 でアクセスできます。
+
+## 編集ポイント（この1箇所だけ）
+
+- `src/pages/index.astro`: 冒頭の `name`, `affiliation`, `researchAreas`, `publications` を編集。
+
+## ディレクトリ構成（最小）
+
+- `package.json`
+- `astro.config.mjs`
+- `src/pages/index.astro`
+- `.gitignore`
+- `README.md`
+
+任意で `public/cv.pdf` を置くとCVリンクが有効になります。
+
+## ビルド/プレビュー
+
+```bash
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## デプロイ
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+生成される `dist/` を任意の静的ホスティング（GitHub Pages, Netlify, Vercel など）へ配置してください。
