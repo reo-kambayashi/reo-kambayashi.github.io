@@ -32,14 +32,28 @@ const contacts = [
     value: 'kambayashi.reo.t6@dc.tohoku.ac.jp',
     href: 'mailto:kambayashi.reo.t6@dc.tohoku.ac.jp',
     newTab: false,
+    icon: 'mail',
   },
   {
     label: 'X',
     value: 'https://x.com/Kambayashi_NLP',
     href: 'https://x.com/Kambayashi_NLP',
     newTab: true,
+    icon: 'x',
   },
 ];
+
+const contactIcons = {
+  mail: {
+    type: 'stroke',
+    d: 'M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75',
+    strokeWidth: 1.5,
+  },
+  x: {
+    type: 'fill',
+    d: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
+  },
+};
 ---
 <!doctype html>
 <html lang="ja">
@@ -53,16 +67,24 @@ const contacts = [
         color-scheme: light;
         --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, -apple-system,
           "Segoe UI", sans-serif;
-        --bg: #f4f7ff;
+        --bg: #dee0e5;
         --text: #1f2d3f;
         --muted: #68748c;
-        --accent: #7ba9ff;
-        --accent-strong: #5f88f0;
+        --accent: #2a4be7;
+        --accent-strong: #1d36d0;
+        --accent-underline: rgba(42, 75, 231, 0.6);
+        --accent-ring: rgba(29, 54, 208, 0.85);
+        --accent-glow: rgba(42, 75, 231, 0.28);
         --border: #d7e3ff;
         --max-width: 760px;
         --font-size-base: clamp(1rem, calc(0.96rem + 0.5vw), 1.18rem);
         --line-height-base: 1.72;
         --paragraph-spacing: clamp(0.85rem, calc(0.7rem + 0.55vw), 1.2rem);
+        --mono-highlight: rgba(255, 255, 255, 0.68);
+        --mono-soft: rgba(210, 214, 224, 0.42);
+        --mono-mist: rgba(148, 152, 164, 0.34);
+        --mono-depth: rgba(96, 102, 118, 0.3);
+        --mono-shadow: rgba(48, 50, 64, 0.32);
       }
 
       * {
@@ -83,21 +105,320 @@ const contacts = [
         line-height: var(--line-height-base);
         letter-spacing: 0.015em;
         -webkit-font-smoothing: antialiased;
+        position: relative;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .bg-canvas {
+        position: fixed;
+        inset: -10vmax;
+        z-index: -2;
+        pointer-events: none;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse at 48% 18%, var(--mono-highlight), transparent 55%),
+          radial-gradient(ellipse at 52% 88%, var(--mono-soft), transparent 64%),
+          radial-gradient(ellipse at 82% 24%, var(--mono-depth), transparent 68%),
+          linear-gradient(200deg, rgba(0, 0, 0, 0.24), transparent 52%),
+          linear-gradient(20deg, rgba(0, 0, 0, 0.14), transparent 58%),
+          radial-gradient(circle at 10% 90%, var(--mono-shadow), transparent 70%);
+        filter: saturate(108%);
+        animation: canvas-wander 32s ease-in-out infinite alternate;
+      }
+
+      .bg-canvas::before {
+        content: '';
+        position: absolute;
+        inset: -32vmax;
+        background: repeating-linear-gradient(
+          125deg,
+          rgba(255, 255, 255, 0.0) 0,
+          rgba(255, 255, 255, 0.08) 4px,
+          rgba(255, 255, 255, 0.18) 18px,
+          rgba(255, 255, 255, 0.0) 32px
+        );
+        opacity: 0.22;
+        mix-blend-mode: screen;
+        animation: scan-streak 18s linear infinite;
+      }
+
+      .bg-canvas::after {
+        content: '';
+        position: absolute;
+        inset: -40vmax;
+        background: conic-gradient(
+          from 180deg,
+          var(--mono-highlight),
+          rgba(255, 255, 255, 0.08),
+          var(--mono-mist),
+          rgba(190, 190, 190, 0.05),
+          var(--mono-depth)
+        );
+        opacity: 0.36;
+        mix-blend-mode: screen;
+        animation: canvas-rotate 46s linear infinite;
+      }
+
+      .bg-canvas .orb {
+        position: absolute;
+        border-radius: 999px;
+        background: radial-gradient(circle at 28% 30%, var(--mono-highlight), rgba(200, 202, 210, 0.2) 55%, transparent 75%);
+        box-shadow: 0 0 140px rgba(255, 255, 255, 0.32);
+        opacity: 0.58;
+        transform-origin: center;
+        backdrop-filter: blur(20px);
+      }
+
+      .orb-1 {
+        width: 64vmax;
+        height: 64vmax;
+        top: -30vmax;
+        left: -12vmax;
+        animation: orb-drift-a 26s ease-in-out infinite alternate;
+      }
+
+      .orb-2 {
+        width: 48vmax;
+        height: 48vmax;
+        top: 10vmax;
+        left: 58vw;
+        animation: orb-drift-b 32s ease-in-out infinite alternate;
+      }
+
+      .orb-3 {
+        width: 40vmax;
+        height: 40vmax;
+        bottom: -22vmax;
+        left: -6vw;
+        animation: orb-drift-c 34s ease-in-out infinite alternate;
+      }
+
+      .orb-4 {
+        width: 46vmax;
+        height: 46vmax;
+        bottom: -20vmax;
+        right: -12vmax;
+        animation: orb-drift-d 38s ease-in-out infinite alternate;
+      }
+
+      .orb-5 {
+        width: 32vmax;
+        height: 32vmax;
+        top: 36vmax;
+        right: 18vmax;
+        animation: orb-drift-e 29s ease-in-out infinite alternate;
+      }
+
+      .orb-6 {
+        width: 26vmax;
+        height: 26vmax;
+        top: -12vmax;
+        right: 8vmax;
+        animation: orb-drift-f 24s ease-in-out infinite alternate;
+      }
+
+      .bg-canvas .trail {
+        position: absolute;
+        width: 120vmax;
+        max-width: none;
+        height: 14vmax;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+        mix-blend-mode: screen;
+        opacity: 0.42;
+        filter: blur(22px);
+        transform-origin: left center;
+      }
+
+      .trail-1 {
+        top: 12vmax;
+        left: -40vmax;
+        animation: trail-flow-a 22s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+      }
+
+      .trail-2 {
+        bottom: 18vmax;
+        left: -60vmax;
+        animation: trail-flow-b 28s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+      }
+
+      .trail-3 {
+        top: 50%;
+        left: -50vmax;
+        transform: translateY(-50%) rotate(8deg);
+        animation: trail-flow-c 24s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+      }
+
+      @keyframes canvas-wander {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+        }
+        50% {
+          transform: translate3d(3.4vmax, -3vmax, 0) scale(1.06) rotate(1.2deg);
+        }
+        100% {
+          transform: translate3d(-3vmax, 3.2vmax, 0) scale(1.04) rotate(-1.2deg);
+        }
+      }
+
+      @keyframes scan-streak {
+        0% {
+          transform: translate3d(-10vmax, -6vmax, 0) rotate(0deg);
+        }
+        100% {
+          transform: translate3d(10vmax, 6vmax, 0) rotate(0deg);
+        }
+      }
+
+      @keyframes canvas-rotate {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      @keyframes orb-drift-a {
+        0% {
+          transform: translate3d(-6vmax, -4vmax, 0) scale(1.12) rotate(-6deg);
+        }
+        45% {
+          transform: translate3d(4vmax, 2vmax, 0) scale(0.96) rotate(3deg);
+        }
+        100% {
+          transform: translate3d(8vmax, 6vmax, 0) scale(1.08) rotate(8deg);
+        }
+      }
+
+      @keyframes orb-drift-b {
+        0% {
+          transform: translate3d(-4vmax, 0, 0) scale(0.92) rotate(0deg);
+        }
+        50% {
+          transform: translate3d(3vmax, -4vmax, 0) scale(1.08) rotate(-6deg);
+        }
+        100% {
+          transform: translate3d(6vmax, 2vmax, 0) scale(0.98) rotate(4deg);
+        }
+      }
+
+      @keyframes orb-drift-c {
+        0% {
+          transform: translate3d(-2vmax, 4vmax, 0) scale(1.06) rotate(0deg);
+        }
+        55% {
+          transform: translate3d(6vmax, -2vmax, 0) scale(0.94) rotate(6deg);
+        }
+        100% {
+          transform: translate3d(10vmax, 2vmax, 0) scale(1.08) rotate(-4deg);
+        }
+      }
+
+      @keyframes orb-drift-d {
+        0% {
+          transform: translate3d(4vmax, 6vmax, 0) scale(0.9) rotate(-6deg);
+        }
+        40% {
+          transform: translate3d(-2vmax, 0, 0) scale(1.06) rotate(10deg);
+        }
+        100% {
+          transform: translate3d(-6vmax, -6vmax, 0) scale(1.04) rotate(18deg);
+        }
+      }
+
+      @keyframes orb-drift-e {
+        0% {
+          transform: translate3d(0, -4vmax, 0) scale(0.94) rotate(0deg);
+        }
+        45% {
+          transform: translate3d(-5vmax, 2vmax, 0) scale(1.04) rotate(-8deg);
+        }
+        100% {
+          transform: translate3d(3vmax, 6vmax, 0) scale(1.08) rotate(10deg);
+        }
+      }
+
+      @keyframes orb-drift-f {
+        0% {
+          transform: translate3d(2vmax, -2vmax, 0) scale(1.06) rotate(4deg);
+        }
+        50% {
+          transform: translate3d(-4vmax, 4vmax, 0) scale(0.92) rotate(-10deg);
+        }
+        100% {
+          transform: translate3d(6vmax, 2vmax, 0) scale(1.02) rotate(6deg);
+        }
+      }
+
+      @keyframes trail-flow-a {
+        0% {
+          transform: translate3d(-10vmax, -6vmax, 0) rotate(6deg) scaleX(0.9);
+          opacity: 0.18;
+        }
+        40% {
+          opacity: 0.46;
+        }
+        100% {
+          transform: translate3d(36vmax, 8vmax, 0) rotate(6deg) scaleX(1.1);
+          opacity: 0.2;
+        }
+      }
+
+      @keyframes trail-flow-b {
+        0% {
+          transform: translate3d(-12vmax, 4vmax, 0) rotate(-4deg) scaleX(1.05);
+          opacity: 0.24;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          transform: translate3d(40vmax, -6vmax, 0) rotate(-4deg) scaleX(0.96);
+          opacity: 0.22;
+        }
+      }
+
+      @keyframes trail-flow-c {
+        0% {
+          transform: translate3d(-16vmax, 0, 0) rotate(8deg) scaleX(0.9);
+          opacity: 0.2;
+        }
+        60% {
+          opacity: 0.48;
+        }
+        100% {
+          transform: translate3d(34vmax, 0, 0) rotate(12deg) scaleX(1.05);
+          opacity: 0.26;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-canvas,
+        .bg-canvas::after,
+        .bg-canvas::before,
+        .bg-canvas .orb,
+        .bg-canvas .trail {
+          animation: none;
+          transform: none;
+          opacity: 0.5;
+        }
       }
 
       a {
         color: var(--accent);
         text-decoration: underline;
-        text-decoration-thickness: 0.1em;
-        text-decoration-color: rgba(123, 169, 255, 0.6);
-        text-underline-offset: 0.2em;
-        transition: color 160ms ease, text-decoration-color 160ms ease;
+        text-decoration-thickness: 0.14em;
+        text-decoration-color: var(--accent-underline);
+        text-underline-offset: 0.25em;
+        transition: color 160ms ease, text-decoration-color 160ms ease, text-decoration-thickness 160ms ease;
       }
 
       a:hover,
       a:focus-visible {
         color: var(--accent-strong);
         text-decoration-color: var(--accent-strong);
+        text-decoration-thickness: 0.18em;
       }
 
       a:focus-visible {
@@ -171,7 +492,7 @@ const contacts = [
         bottom: 0;
         width: 44px;
         height: 2px;
-        background: var(--accent);
+        background: linear-gradient(90deg, var(--accent-strong), var(--accent-glow));
         border-radius: 999px;
       }
 
@@ -228,11 +549,24 @@ const contacts = [
         position: absolute;
         top: 0.6rem;
         left: 0;
-        width: 0.6rem;
-        height: 0.6rem;
+        width: 0.66rem;
+        height: 0.66rem;
         border-radius: 50%;
-        border: 2px solid rgba(123, 169, 255, 0.75);
-        background: rgba(123, 169, 255, 0.2);
+        border: 2px solid var(--accent-ring);
+        background: radial-gradient(circle at 30% 30%, var(--accent-glow), transparent 72%);
+        box-shadow: 0 0 6px rgba(42, 75, 231, 0.22);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .pub-list {
@@ -262,6 +596,50 @@ const contacts = [
         display: block;
       }
 
+      .contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding-left: 0;
+      }
+
+      .contact-item::before {
+        display: none;
+      }
+
+      .contact-icon {
+        width: 1.8rem;
+        height: 1.8rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        background: rgba(42, 75, 231, 0.16);
+        border-radius: 12px;
+        padding: 0.35rem;
+        flex-shrink: 0;
+        box-shadow: inset 0 0 0 1px rgba(42, 75, 231, 0.18);
+      }
+
+      .contact-icon svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        display: block;
+      }
+
+      .contact-item a {
+        overflow-wrap: anywhere;
+      }
+
       @media (max-width: 720px) {
         main.wrap {
           padding-inline: clamp(1.1rem, 7vw, 1.6rem);
@@ -282,6 +660,21 @@ const contacts = [
         li::before {
           top: 0.5rem;
         }
+
+        .contact-item {
+          align-items: flex-start;
+        }
+
+        .contact-icon {
+          width: 1.6rem;
+          height: 1.6rem;
+          padding: 0.3rem;
+        }
+
+        .contact-icon svg {
+          width: 1rem;
+          height: 1rem;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -301,6 +694,17 @@ const contacts = [
     </script>
   </head>
   <body>
+    <div class="bg-canvas" aria-hidden="true">
+      <span class="trail trail-1"></span>
+      <span class="trail trail-2"></span>
+      <span class="trail trail-3"></span>
+      <span class="orb orb-1"></span>
+      <span class="orb orb-2"></span>
+      <span class="orb orb-3"></span>
+      <span class="orb orb-4"></span>
+      <span class="orb orb-5"></span>
+      <span class="orb orb-6"></span>
+    </div>
     <main class="wrap">
       <section id="top" class="hero scroll-fade">
         <h1>神林 励旺</h1>
@@ -355,19 +759,42 @@ const contacts = [
 
       <section id="contact" class="scroll-fade">
         <h2>連絡先</h2>
-        <ul>
-          {contacts.map((contact) => (
-            <li>
-              {contact.label}:{' '}
-              <a
-                href={contact.href}
-                target={contact.newTab ? '_blank' : undefined}
-                rel={contact.newTab ? 'noopener noreferrer' : undefined}
-              >
-                {contact.value}
-              </a>
-            </li>
-          ))}
+        <ul class="contact-list">
+          {contacts.map((contact) => {
+            const icon = contact.icon ? contactIcons[contact.icon] : undefined;
+
+            return (
+              <li class="contact-item">
+                {icon && (
+                  <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      {icon.type === 'fill' ? (
+                        <path d={icon.d} fill="currentColor" />
+                      ) : (
+                        <path
+                          d={icon.d}
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width={icon.strokeWidth}
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      )}
+                    </svg>
+                  </span>
+                )}
+                <a
+                  href={contact.href}
+                  target={contact.newTab ? '_blank' : undefined}
+                  rel={contact.newTab ? 'noopener noreferrer' : undefined}
+                  aria-label={`${contact.label}：${contact.value}`}
+                >
+                  <span class="sr-only">{contact.label}：</span>
+                  {contact.value}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </main>
