@@ -1,30 +1,31 @@
 # Repository Guidelines
 
-## プロジェクト構成とモジュール配置
-- `src/pages/index.astro`: 単一ページ構成のメインビュー。HTMLとスタイルが同居しているため、セクション追加時はここを直接編集します。
-- `src/components/`: 再利用コンポーネントを置く場所。現在は `Welcome.astro` のみですが、新規要素はここに整理してください。
-- `src/assets/`: 画像や SVG を配置。ビルド時に自動最適化されるので、追加資産はこのディレクトリに格納します。
-- `public/`: 静的ファイルと `cv.pdf` など直接配信したいファイルを置きます。ビルド時にそのまま出力されます。
+## Project Structure & Module Organization
+- This Astro site renders from `src/pages/index.astro`; keep layout, content blocks, and scoped styles together there for quick review.
+- Reusable UI lives in `src/components/` (see `Welcome.astro` for structure). Share styling via component-level `<style>` blocks or extracted components.
+- Place images and SVGs in `src/assets/`; store downloadable artifacts (e.g., `cv.pdf`) inside `public/`.
+- Avoid editing the generated `dist/` directory; always regenerate via build commands instead of manual tweaks.
 
-## ビルド・テスト・開発コマンド
-- `npm run dev`: Astro の開発サーバーを起動し、ホットリロードで変更を確認します。
-- `npm run build`: 静的生成を行い、`dist/` に最終成果物を出力します。
-- `npm run preview`: ビルド済み成果物をローカルでサーブし、本番挙動を確認します。
+## Build, Test, and Development Commands
+- `npm run dev`: launches the Astro dev server at http://localhost:4321/ with hot reload.
+- `npm run build`: compiles the static site into `dist/`; run before publishing or creating a preview build.
+- `npm run preview`: serves the latest production build locally so you can validate the generated files.
 
-## コーディングスタイルと命名
-- インデントは 2 スペースを推奨。既存ファイルに合わせて統一してください。
-- HTML/CSS は BEM ではなくシンプルなケバブケース ID・クラスを使用。新規スタイルは `style` ブロック内で記述するか、必要に応じてコンポーネントへ分離します。
-- TypeScript 変数はキャメルケース、定数はパスカルケース。Astro ファイル冒頭で宣言する定数は `const` を徹底します。
+## Coding Style & Naming Conventions
+- Use two-space indentation across Astro, HTML, and scripts.
+- Prefer kebab-case for CSS classes and IDs (e.g., `hero-section`, `primary-button`).
+- In frontmatter scripts, use camelCase for variables and PascalCase for exported components. Keep inline logic minimal and extract shared helpers into components when duplication appears.
 
-## テスト方針
-- 現状テストフレームワークは未導入です。振る舞い追加時は [Astro Test Runner](https://docs.astro.build/en/guides/testing/) の導入を検討し、`npm run test` スクリプトを整備してください。
-- スナップショットよりレンダリング結果の最小ユニットテストを推奨。テストファイルは `tests/` ディレクトリを新設し、`*.test.ts` 形式で配置します。
+## Testing Guidelines
+- No automated tests exist yet. When adding interactive behavior, introduce Astro Test Runner and expose it via `npm run test`.
+- Place new specs under `tests/` using the `*.test.ts` suffix, grouping by component or feature.
+- Document any manual QA steps in the pull request when automated coverage is not yet available.
 
-## コミットとプルリクエスト
-- Git 履歴は短い命令形メッセージ（例: `astro init`）で統一されています。同様に 50 文字以内の要約を推奨します。
-- プルリクエストでは変更内容、スクリーンショット（UI 変更時）、関連 Issue のリンクを明記してください。
-- 依存追加や構成変更を行った場合は理由と影響範囲を箇条書きで説明し、レビュアーがリリース可否を判断しやすくしてください。
+## Commit & Pull Request Guidelines
+- Write commit subjects in short imperative English (≤50 characters), e.g., `add hero section`; expand with a body only if necessary.
+- Pull requests should summarize changes, link related issues, and include before/after screenshots for UI changes.
+- Call out dependency updates or configuration impacts in bullet lists so reviewers can assess deployment risk.
 
-## セキュリティと設定メモ
-- `.env` は現状不要ですが、将来機密情報を扱う場合は `env.example` を用意し、実ファイルを gitignore に追加します。
-- Astro 4 系を使用しているため、アップグレード時は `package-lock.json` の更新と `npm run build` の通過を確認してからマージしてください。
+## Security & Configuration Tips
+- Secrets are not required today. If they become necessary, create `env.example`, add `.env` to `.gitignore`, and document variables.
+- For Astro upgrades, update `package-lock.json`, run `npm run build`, and note the version change in the pull request.
