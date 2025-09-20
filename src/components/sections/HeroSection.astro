@@ -1,0 +1,14 @@
+---
+type Props = {
+  name: string;
+  affiliation: string;
+  researchArea: string;
+};
+
+const { name, affiliation, researchArea } = Astro.props as Props;
+---
+<section id="top" class="hero scroll-fade">
+  <h1>{name}</h1>
+  <p class="muted">{affiliation}</p>
+  <p class="muted">{researchArea}</p>
+</section>

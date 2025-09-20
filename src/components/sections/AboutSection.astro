@@ -1,0 +1,19 @@
+---
+type Props = {
+  description: string;
+  group: {
+    name: string;
+    href: string;
+  };
+};
+
+const { description, group } = Astro.props as Props;
+---
+<section id="about" class="scroll-fade">
+  <h2>プロフィール</h2>
+  <p>
+    {description}
+    <a href={group.href} target="_blank" rel="noopener noreferrer">{group.name}</a>
+    に所属しています。
+  </p>
+</section>

@@ -1,0 +1,428 @@
+<script type="module">
+  const initScrollFade = () => {
+    const SELECTOR = '.scroll-fade';
+    const sections = new Set();
+    const revealedSections = new WeakSet();
+    const configCache = new WeakMap();
+    const supportIntersectionObserver = 'IntersectionObserver' in window;
+    const defaultObserverOptions = {
+      threshold: 0.2,
+      rootMargin: '0px 0px -10% 0px',
+    };
+    const presets = {
+      'fade-left': { x: '-18px', y: '0px', scale: 1 },
+      'fade-right': { x: '18px', y: '0px', scale: 1 },
+      'fade-up': { x: '0px', y: '24px', scale: 1 },
+      'fade-down': { x: '0px', y: '-24px', scale: 1 },
+      'fade-in': { x: '0px', y: '0px', scale: 1 },
+      'zoom-in': { x: '0px', y: '0px', scale: 0.94 },
+    };
+
+    let observer;
+    let mutationObserver;
+
+    const normalizeTime = (value, fallback) => {
+      if (value == null || value === '') {
+        return fallback;
+      }
+
+      const trimmed = String(value).trim();
+
+      if (/^-?\d*\.?\d+s$/.test(trimmed)) {
+        return trimmed;
+      }
+
+      if (/^-?\d*\.?\d+ms$/.test(trimmed)) {
+        return trimmed;
+      }
+
+      const numeric = Number(trimmed);
+      return Number.isFinite(numeric) ? `${numeric}ms` : fallback;
+    };
+
+    const parseMilliseconds = (value) => {
+      if (value == null || value === '') {
+        return 0;
+      }
+
+      const trimmed = String(value).trim();
+
+      if (trimmed.endsWith('ms')) {
+        return Number(trimmed.slice(0, -2)) || 0;
+      }
+
+      if (trimmed.endsWith('s')) {
+        const seconds = Number(trimmed.slice(0, -1));
+        return Number.isFinite(seconds) ? seconds * 1000 : 0;
+      }
+
+      const numeric = Number(trimmed);
+      return Number.isFinite(numeric) ? numeric : 0;
+    };
+
+    const normalizeLength = (value, fallback) => {
+      if (value == null || value === '') {
+        return fallback;
+      }
+
+      const trimmed = String(value).trim();
+
+      if (trimmed === '0') {
+        return '0px';
+      }
+
+      if (/^-?\d*\.?\d+(px|rem|em|vh|vw|%)$/i.test(trimmed)) {
+        return trimmed;
+      }
+
+      const numeric = Number(trimmed);
+      return Number.isFinite(numeric) ? `${numeric}px` : fallback;
+    };
+
+    const normalizeScale = (value, fallback) => {
+      if (value == null || value === '') {
+        return fallback;
+      }
+
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : fallback;
+    };
+
+    const parseBoolean = (value, fallback) => {
+      if (value == null) {
+        return fallback;
+      }
+
+      const trimmed = String(value).trim().toLowerCase();
+      if (trimmed === 'true' || trimmed === '1') {
+        return true;
+      }
+      if (trimmed === 'false' || trimmed === '0') {
+        return false;
+      }
+      return fallback;
+    };
+
+    const parseNumber = (value, fallback) => {
+      if (value == null || value === '') {
+        return fallback;
+      }
+
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : fallback;
+    };
+
+    const getConfig = (section) => {
+      const cached = configCache.get(section);
+      if (cached) {
+        return cached;
+      }
+
+      const dataset = section.dataset;
+      const presetName = dataset.animate ?? 'fade-left';
+      const preset = presets[presetName] ?? presets['fade-left'];
+
+      const config = {
+        presetName,
+        translateX: normalizeLength(dataset.animateTranslateX, preset.x),
+        translateY: normalizeLength(dataset.animateTranslateY, preset.y),
+        scale: normalizeScale(dataset.animateScale, preset.scale),
+        delay: normalizeTime(dataset.animateDelay, '0ms'),
+        duration: normalizeTime(dataset.animateDuration, '480ms'),
+        opacityDuration: normalizeTime(
+          dataset.animateOpacityDuration,
+          normalizeTime(dataset.animateDuration, '420ms')
+        ),
+        easingTransform:
+          dataset.animateEasing ?? 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+        easingOpacity: dataset.animateOpacityEasing ?? 'ease-out',
+        repeat: parseBoolean(dataset.animateRepeat, false),
+        stagger: parseNumber(dataset.animateStagger, 0),
+        staggerTarget: dataset.animateStaggerTarget ?? '[data-animate-item]',
+        childDuration: normalizeTime(dataset.animateChildDuration, ''),
+        childEasing: dataset.animateChildEasing ?? '',
+      };
+
+      configCache.set(section, config);
+      applyBaseStyles(section, config);
+      return config;
+    };
+
+    const applyBaseStyles = (section, config) => {
+      section.style.setProperty('--animate-delay', config.delay);
+      section.style.setProperty('--animate-duration', config.duration);
+      section.style.setProperty('--animate-duration-opacity', config.opacityDuration || config.duration);
+      section.style.setProperty('--animate-ease-transform', config.easingTransform);
+      section.style.setProperty('--animate-ease-opacity', config.easingOpacity);
+      section.style.setProperty('--animate-translate-x', config.translateX);
+      section.style.setProperty('--animate-translate-y', config.translateY);
+      section.style.setProperty('--animate-scale', String(config.scale));
+
+      if (config.childDuration) {
+        section.style.setProperty('--animate-child-duration', config.childDuration);
+      }
+
+      if (config.childEasing) {
+        section.style.setProperty('--animate-child-easing', config.childEasing);
+      }
+    };
+
+    const showSectionImmediately = (section) => {
+      const config = getConfig(section);
+      resetStagger(section, config);
+      section.classList.add('is-visible');
+      revealedSections.add(section);
+    };
+
+    const getStaggerTargets = (section, config) => {
+      const selector = config.staggerTarget;
+
+      if (!selector) {
+        return [];
+      }
+
+      if (selector === 'children') {
+        return Array.from(section.children);
+      }
+
+      if (selector === 'self') {
+        return [section];
+      }
+
+      try {
+        return Array.from(section.querySelectorAll(selector));
+      } catch (error) {
+        console.warn('[scroll-fade] 無効な data-animate-stagger-target が指定されました:', selector);
+        return [];
+      }
+    };
+
+    const applyStagger = (section, config) => {
+      if (config.stagger <= 0) {
+        return;
+      }
+
+      const targets = getStaggerTargets(section, config);
+      if (!targets.length) {
+        return;
+      }
+
+      const baseDelay = parseMilliseconds(config.delay);
+
+      targets.forEach((target, index) => {
+        if (target.dataset.animateChildDelay) {
+          target.style.setProperty(
+            '--animate-child-delay',
+            normalizeTime(target.dataset.animateChildDelay, '0ms')
+          );
+          return;
+        }
+
+        const computedDelay = baseDelay + config.stagger * index;
+        target.style.setProperty('--animate-child-delay', `${computedDelay}ms`);
+      });
+    };
+
+    const resetStagger = (section, config) => {
+      if (config.stagger <= 0) {
+        return;
+      }
+
+      const targets = getStaggerTargets(section, config);
+      targets.forEach((target) => {
+        if (!target.dataset.animateChildDelay) {
+          target.style.removeProperty('--animate-child-delay');
+        }
+      });
+    };
+
+    const revealSection = (section, config) => {
+      if (revealedSections.has(section)) {
+        return;
+      }
+
+      applyStagger(section, config);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          section.classList.add('is-visible');
+          revealedSections.add(section);
+        });
+      });
+    };
+
+    const hideSection = (section, config) => {
+      section.classList.remove('is-visible');
+      resetStagger(section, config);
+      revealedSections.delete(section);
+    };
+
+    const observeVisibleSections = () => {
+      if (!observer) {
+        return;
+      }
+
+      sections.forEach((section) => {
+        const config = getConfig(section);
+        if (!revealedSections.has(section) || config.repeat) {
+          observer.observe(section);
+        }
+      });
+    };
+
+    const teardownObserver = () => {
+      if (observer) {
+        observer.disconnect();
+        observer = undefined;
+      }
+    };
+
+    const setupObserver = () => {
+      if (!supportIntersectionObserver) {
+        sections.forEach(showSectionImmediately);
+        return;
+      }
+
+      teardownObserver();
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const section = entry.target;
+          const config = getConfig(section);
+
+          if (entry.isIntersecting) {
+            revealSection(section, config);
+
+            if (!config.repeat && observer) {
+              observer.unobserve(section);
+            }
+          } else if (config.repeat && revealedSections.has(section)) {
+            hideSection(section, config);
+          }
+        });
+      }, defaultObserverOptions);
+
+      observeVisibleSections();
+    };
+
+    const applyMotionPreference = (shouldReduce) => {
+      if (shouldReduce || !supportIntersectionObserver) {
+        teardownObserver();
+        sections.forEach(showSectionImmediately);
+        return;
+      }
+
+      sections.forEach((section) => {
+        const config = getConfig(section);
+        if (!config.repeat) {
+          section.classList.remove('is-visible');
+          revealedSections.delete(section);
+        }
+        resetStagger(section, config);
+      });
+
+      setupObserver();
+    };
+
+    const registerSection = (section) => {
+      if (!section || sections.has(section)) {
+        return;
+      }
+
+      sections.add(section);
+      getConfig(section);
+
+      if (mediaQuery.matches || !supportIntersectionObserver) {
+        showSectionImmediately(section);
+        return;
+      }
+
+      if (!observer) {
+        setupObserver();
+      } else {
+        observer.observe(section);
+      }
+    };
+
+    const cleanupSection = (section) => {
+      if (!section || !sections.has(section)) {
+        return;
+      }
+
+      sections.delete(section);
+      configCache.delete(section);
+      revealedSections.delete(section);
+
+      if (observer) {
+        observer.unobserve(section);
+      }
+    };
+
+    const collectInitialSections = () => {
+      document.querySelectorAll(SELECTOR).forEach(registerSection);
+    };
+
+    const handleMutations = (mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) {
+            return;
+          }
+
+          if (node.matches?.(SELECTOR)) {
+            registerSection(node);
+          }
+
+          node.querySelectorAll?.(SELECTOR).forEach(registerSection);
+        });
+
+        mutation.removedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) {
+            return;
+          }
+
+          if (sections.has(node)) {
+            cleanupSection(node);
+          }
+
+          node.querySelectorAll?.(SELECTOR).forEach((child) => {
+            if (sections.has(child)) {
+              cleanupSection(child);
+            }
+          });
+        });
+      });
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    collectInitialSections();
+    applyMotionPreference(mediaQuery.matches);
+
+    if (!mediaQuery.matches && supportIntersectionObserver && !observer) {
+      setupObserver();
+    }
+
+    if (supportIntersectionObserver && !mutationObserver) {
+      mutationObserver = new MutationObserver(handleMutations);
+      if (document.body) {
+        mutationObserver.observe(document.body, { childList: true, subtree: true });
+      }
+    }
+
+    const handleMediaChange = (event) => {
+      applyMotionPreference(event.matches);
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleMediaChange);
+    } else if (typeof mediaQuery.addListener === 'function') {
+      mediaQuery.addListener(handleMediaChange);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollFade, { once: true });
+  } else {
+    initScrollFade();
+  }
+</script>

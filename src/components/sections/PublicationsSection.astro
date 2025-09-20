@@ -1,0 +1,21 @@
+---
+import type { Publication } from '../../data/profile';
+
+type Props = {
+  publications: Publication[];
+};
+
+const { publications } = Astro.props as Props;
+---
+<section id="research" class="scroll-fade">
+  <h2>発表</h2>
+  <ul class="pub-list">
+    {publications.map((publication) => (
+      <li>
+        <p class="pub-title">{publication.title}</p>
+        <p class="pub-authors">{publication.authors.join(', ')}</p>
+        <p class="pub-meta">{publication.venue}</p>
+      </li>
+    ))}
+  </ul>
+</section>

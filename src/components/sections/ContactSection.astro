@@ -1,0 +1,50 @@
+---
+import type { Contact, ContactIcon, ContactIconKey } from '../../data/profile';
+
+type Props = {
+  contacts: Contact[];
+  contactIcons: Record<ContactIconKey, ContactIcon>;
+};
+
+const { contacts, contactIcons } = Astro.props as Props;
+---
+<section id="contact" class="scroll-fade">
+  <h2>連絡先</h2>
+  <ul class="contact-list">
+    {contacts.map((contact) => {
+      const icon = contact.icon ? contactIcons[contact.icon] : undefined;
+
+      return (
+        <li class="contact-item">
+          {icon && (
+            <span class="contact-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                {icon.type === 'fill' ? (
+                  <path d={icon.d} fill="currentColor" />
+                ) : (
+                  <path
+                    d={icon.d}
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width={icon.strokeWidth}
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                )}
+              </svg>
+            </span>
+          )}
+          <a
+            href={contact.href}
+            target={contact.newTab ? '_blank' : undefined}
+            rel={contact.newTab ? 'noopener noreferrer' : undefined}
+            aria-label={`${contact.label}：${contact.value}`}
+          >
+            <span class="sr-only">{contact.label}：</span>
+            {contact.value}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>

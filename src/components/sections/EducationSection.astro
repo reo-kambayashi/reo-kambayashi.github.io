@@ -1,0 +1,19 @@
+---
+import type { Education } from '../../data/profile';
+
+type Props = {
+  educationHistory: Education[];
+};
+
+const { educationHistory } = Astro.props as Props;
+---
+<section id="education" class="scroll-fade">
+  <h2>学歴</h2>
+  <ul>
+    {educationHistory.map((history) => (
+      <li>
+        {history.period}: {history.description}
+      </li>
+    ))}
+  </ul>
+</section>

@@ -1,0 +1,20 @@
+---
+import type { Award } from '../../data/profile';
+
+type Props = {
+  awards: Award[];
+};
+
+const { awards } = Astro.props as Props;
+---
+<section id="awards" class="scroll-fade">
+  <h2>受賞</h2>
+  <ul>
+    {awards.map((award) => (
+      <li>
+        {award.title}<br />
+        {award.detail && <span class="pub-meta">({award.detail})</span>}
+      </li>
+    ))}
+  </ul>
+</section>
