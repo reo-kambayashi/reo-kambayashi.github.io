@@ -3,19 +3,131 @@ import type { Publication } from '../../data/profile';
 
 type Props = {
   publications: Publication[];
+  selfName?: string;
 };
 
-const { publications } = Astro.props as Props;
+const { publications, selfName } = Astro.props as Props;
 ---
-<section id="research" class="scroll-fade">
-  <h2>発表</h2>
-  <ul class="pub-list">
-    {publications.map((publication) => (
-      <li>
-        <p class="pub-title">{publication.title}</p>
-        <p class="pub-authors">{publication.authors.join(', ')}</p>
-        <p class="pub-meta">{publication.venue}</p>
-      </li>
-    ))}
-  </ul>
+<section id="research" aria-labelledby="research-heading">
+  <div class="section-header section-header--rule">
+    <h2 id="research-heading">研究発表</h2>
+    <div class="section-rule" aria-hidden="true"></div>
+  </div>
+  <div class="publication-list">
+    {publications.length > 0 ? (
+      publications.map((pub) => (
+        <article class="publication-item surface-card">
+          <h3>{pub.title}</h3>
+          <p class="publication-authors">
+            {pub.authors.map((author, index) => (
+              <>
+                {index > 0 && '、'}
+                {selfName && author === selfName ? <strong>{author}</strong> : author}
+              </>
+            ))}
+          </p>
+          <div class="publication-meta">
+            <p class="publication-venue">{pub.venue}</p>
+            {pub.type && <p class="publication-type">{pub.type}</p>}
+          </div>
+          {pub.note && <p class="publication-note">{pub.note}</p>}
+          {pub.links && pub.links.length > 0 && (
+            <ul class="publication-links" aria-label="関連リンク">
+              {pub.links.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      ))
+    ) : (
+      <p class="publication-empty">発表情報は現在準備中です。</p>
+    )}
+  </div>
 </section>
+
+<style>
+  .publication-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .publication-item {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.35rem 1.4rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: clamp(1.04rem, 0.98rem + 0.26vw, 1.16rem);
+    line-height: 1.7;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .publication-type,
+  .publication-venue,
+  .publication-note,
+  .publication-authors {
+    margin: 0;
+  }
+
+  .publication-type {
+    flex-shrink: 0;
+    padding: 0.24rem 0.7rem;
+    border: 1px solid rgba(61, 111, 180, 0.18);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--accent);
+    background: rgba(61, 111, 180, 0.06);
+  }
+
+  .publication-authors {
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 0.96rem;
+  }
+
+  .publication-authors strong {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .publication-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 0.85rem;
+  }
+
+  .publication-venue {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .publication-note {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .publication-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    padding-top: 0.1rem;
+  }
+
+  .publication-empty {
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .publication-item {
+      padding: 1.2rem 1.1rem;
+    }
+  }
+</style>

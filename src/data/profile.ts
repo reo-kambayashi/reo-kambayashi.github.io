@@ -1,12 +1,23 @@
-export type Award = {
-  title: string;
-  detail?: string;
+export type PublicationLink = {
+  label: string;
+  href: string;
 };
 
 export type Publication = {
   title: string;
   authors: string[];
   venue: string;
+  type?: string;
+  note?: string;
+  links?: PublicationLink[];
+};
+
+export type Award = {
+  title: string;
+  targetTitle?: string;
+  result?: string;
+  certificateImage?: 'yans';
+  certificateAlt?: string;
 };
 
 export type Education = {
@@ -37,47 +48,86 @@ export const contactIcons: Record<ContactIconKey, ContactIcon> = {
 export type Contact = {
   label: string;
   value: string;
+  displayValue?: string;
   href: string;
   newTab: boolean;
   icon?: ContactIconKey;
+  showLabel?: boolean;
 };
+
+export type SectionLink = {
+  href: `#${string}`;
+  label: string;
+};
+
+export const siteMeta = {
+  title: '神林励旺 | 研究者プロフィール',
+  description: '神林励旺の研究テーマ、発表、経歴、連絡先をまとめた研究者プロフィールページ',
+};
+
+export const sectionLinks: SectionLink[] = [
+  { href: '#about', label: 'プロフィール' },
+  { href: '#research', label: '研究発表' },
+  { href: '#awards', label: '受賞' },
+  { href: '#education', label: '経歴' },
+  { href: '#contact', label: '連絡先' },
+];
 
 export const profileSummary = {
   name: '神林 励旺',
-  affiliation: '所属: 東北大学 工学部 電気情報物理工学科（学部4年）',
-  researchArea: '研究分野: 自然言語処理',
+  selfName: '神林 励旺',
+  affiliationLabel: '所属',
+  affiliationValue: '東北大学工学部電気情報物理工学科 学部4年',
+  researchAreaLabel: '研究分野',
+  researchAreaValue: '自然言語処理',
 };
 
 export const about = {
-  description: '東北大学工学部電気情報物理工学科の学部4年生です。',
+  description: '東北大学工学部電気情報物理工学科の学部4年です。',
   group: {
     name: 'Tohoku NLP Group',
     href: 'https://www.nlp.ecei.tohoku.ac.jp/',
   },
 };
 
-export const awards: Award[] = [
+export const publications: Publication[] = [
   {
-    title: '第20回言語処理若手シンポジウム(YANS2025) 奨励賞',
-    detail: '24/246 9.76%',
+    title: '画像生成学習が視覚理解能力へ与える影響の分析',
+    authors: ['神林 励旺', '稲葉 達郎', 'Benjamin Heinzerling', '坂口 慶祐', '乾 健太郎', '磯沼 大'],
+    venue: '言語処理学会第32回年次大会（NLP 2026） / C3-12',
+    type: 'ポスター発表',
+    links: [
+      {
+        label: '大会プログラム',
+        href: 'https://www.anlp.jp/proceedings/annual_meeting/2026/#C3',
+      },
+    ],
+  },
+  {
+    title: 'マルチモーダルLLMのモダリティ間共有表現の解明',
+    authors: ['神林 励旺', '稲葉 達郎', 'Benjamin Heinzerling', '坂口 慶祐', '磯沼 大'],
+    venue: '第20回言語処理若手シンポジウム（YANS 2025）',
+    type: 'ポスター発表',
   },
 ];
 
-export const publications: Publication[] = [
+export const awards: Award[] = [
   {
-    title: '「マルチモーダルLLMのモダリティ間共有表現の解明」',
-    authors: ['神林 励旺', '稲葉 達郎', 'Heinzerling Benjamin', '坂口 慶祐', '磯沼 大'],
-    venue: '第20回言語処理若手シンポジウム(YANS2025), 2025',
+    title: '第20回言語処理若手シンポジウム（YANS 2025）奨励賞',
+    targetTitle: 'マルチモーダルLLMのモダリティ間共有表現の解明',
+    result: '対象246件中24件（受賞率9.76%）',
+    certificateImage: 'yans',
+    certificateAlt: 'YANS 2025 奨励賞の賞状',
   },
 ];
 
 export const educationHistory: Education[] = [
   {
-    period: '2022年4月 - 現在',
+    period: '2022年4月–現在',
     description: '東北大学 工学部 電気情報物理工学科 学士課程',
   },
   {
-    period: '2019年4月 - 2022年3月',
+    period: '2019年4月–2022年3月',
     description: '長野県長野高等学校',
   },
 ];
@@ -93,8 +143,10 @@ export const contacts: Contact[] = [
   {
     label: 'X',
     value: 'https://x.com/Kambayashi_NLP',
+    displayValue: '@Kambayashi_NLP',
     href: 'https://x.com/Kambayashi_NLP',
     newTab: true,
     icon: 'x',
+    showLabel: false,
   },
 ];

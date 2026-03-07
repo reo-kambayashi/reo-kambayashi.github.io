@@ -2,31 +2,29 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
-import AwardsSection from '../components/sections/AwardsSection.astro';
 import PublicationsSection from '../components/sections/PublicationsSection.astro';
+import AwardsSection from '../components/sections/AwardsSection.astro';
 import EducationSection from '../components/sections/EducationSection.astro';
 import ContactSection from '../components/sections/ContactSection.astro';
-import ScrollFadeScript from '../components/scripts/ScrollFadeScript.astro';
 import {
+  siteMeta,
   profileSummary,
   about,
-  awards,
   publications,
+  awards,
   educationHistory,
   contacts,
   contactIcons,
 } from '../data/profile';
 ---
-<SiteLayout title="Reo Kambayashi HP" description="HP">
-  <HeroSection
-    name={profileSummary.name}
-    affiliation={profileSummary.affiliation}
-    researchArea={profileSummary.researchArea}
+<SiteLayout title={siteMeta.title} description={siteMeta.description}>
+  <HeroSection profileSummary={profileSummary} />
+  <AboutSection
+    description={about.description}
+    group={about.group}
   />
-  <AboutSection description={about.description} group={about.group} />
+  <PublicationsSection publications={publications} selfName={profileSummary.selfName} />
   <AwardsSection awards={awards} />
-  <PublicationsSection publications={publications} />
   <EducationSection educationHistory={educationHistory} />
   <ContactSection contacts={contacts} contactIcons={contactIcons} />
-  <ScrollFadeScript slot="scripts" />
 </SiteLayout>

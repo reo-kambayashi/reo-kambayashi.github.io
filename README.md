@@ -1,50 +1,74 @@
-# 研究者用HP（Astro 単一ページ最小構成）
+# 研究者プロフィールサイト
 
-Astroで作った“1ファイルだけ”の研究者向けHPです。編集は `src/pages/index.astro` のみで完結します。
+Astro で作った研究者向けの単一ページサイトです。現在は `プロフィール / 研究・業績 / 経歴 / 連絡先` の4セクション構成で、白と青を基調にした静かなトーンへ調整しています。
 
 ## セットアップ
 
-1. Node.js 18以上を用意します。
-2. 依存関係をインストール:
+1. Node.js 18 以上を用意します。
+2. 依存関係をインストールします。
+
    ```bash
    npm install
    ```
-3. 開発サーバを起動:
+
+3. 開発サーバを起動します。
+
    ```bash
    npm run dev
    ```
-   既定では http://localhost:4321 でアクセスできます。
 
-## 編集ポイント（この1箇所だけ）
+   既定では `http://localhost:4321` で確認できます。
 
-- `src/pages/index.astro`: 冒頭の `name`, `affiliation`, `researchAreas`, `publications` を編集。
+## 主な編集ポイント
 
-## ディレクトリ構成（最小）
+- [`src/data/profile.ts`](./src/data/profile.ts)
+  氏名、所属、研究分野、プロフィール文、発表、経歴、連絡先を編集します。
+- [`src/pages/index.astro`](./src/pages/index.astro)
+  セクションの並び順と読み込むコンポーネントを管理します。
+- [`src/layouts/SiteLayout.astro`](./src/layouts/SiteLayout.astro)
+  全体レイアウト、配色、共通タイポグラフィ、ページ内ナビゲーションを管理します。
+- [`src/components/sections/`](./src/components/sections/)
+  各セクションの見た目と表示ロジックを管理します。
 
-- `package.json`
-- `astro.config.mjs`
-- `src/pages/index.astro`
-- `.gitignore`
-- `README.md`
+## 現在の構成
 
-任意で `public/cv.pdf` を置くとCVリンクが有効になります。
+- `HeroSection`
+  氏名、所属、研究分野をコンパクトに見せる導入部です。
+- `AboutSection`
+  プロフィール文を表示します。
+- `PublicationsSection`
+  発表一覧と補足情報を表示します。
+- `EducationSection`
+  経歴を縦タイムラインで表示します。
+- `ContactSection`
+  メールと X の連絡先を表示します。
 
-## ビルド/プレビュー
+## データ構造のメモ
+
+- `profileSummary`
+  名前とヒーロー領域の基本情報です。
+- `about`
+  プロフィール本文と所属研究室リンクです。
+- `publications`
+  タイトル、著者、会議名、発表形式、補足メモ、外部リンクを持ちます。
+- `educationHistory`
+  `period` と `description` で経歴を管理します。
+- `contacts`
+  表示ラベル、値、リンク先、アイコン種別を管理します。
+
+## ビルド / プレビュー
 
 ```bash
 npm run build
 npm run preview
 ```
 
+## デザイン方針
+
+- 白と青を基調にし、グラデーション・影・過剰な装飾は使わない
+- 情報は短く静かに見せ、研究者サイトらしい読みやすさを優先する
+- 英語UIは避け、日本語中心で統一する
+
 ## デプロイ
 
-### GitHub Pages
-
-1. GitHub 上にリポジトリを作成し、このプロジェクトを `main` ブランチへプッシュします。
-2. `Settings > Pages` で **Build and deployment** を「GitHub Actions」に変更します。
-3. `main` ブランチへコミットすると `.github/workflows/deploy.yml` が自動で実行され、`dist/` が Pages に公開されます。
-4. プロジェクトページ（`https://<ユーザー名>.github.io/<リポジトリ名>/`）で公開する場合は、アクション内で自動設定される `base`/`site` を利用できるため追加設定は不要です。ユーザー/オーガニゼーションページ（`<ユーザー名>.github.io`）も同様に対応済みです。
-
-### その他のホスティング
-
-生成される `dist/` を任意の静的ホスティング（Netlify, Vercel など）へ配置してください。
+生成される `dist/` を GitHub Pages、Netlify、Vercel など任意の静的ホスティングに配置してください。

@@ -8,43 +8,145 @@ type Props = {
 
 const { contacts, contactIcons } = Astro.props as Props;
 ---
-<section id="contact" class="scroll-fade">
-  <h2>連絡先</h2>
+<section id="contact" aria-labelledby="contact-heading">
+  <div class="section-header section-header--rule">
+    <h2 id="contact-heading">連絡先</h2>
+    <div class="section-rule" aria-hidden="true"></div>
+  </div>
   <ul class="contact-list">
     {contacts.map((contact) => {
       const icon = contact.icon ? contactIcons[contact.icon] : undefined;
-
+      const showLabel = contact.showLabel ?? true;
       return (
         <li class="contact-item">
-          {icon && (
-            <span class="contact-icon">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                {icon.type === 'fill' ? (
-                  <path d={icon.d} fill="currentColor" />
-                ) : (
-                  <path
-                    d={icon.d}
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width={icon.strokeWidth}
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                )}
-              </svg>
-            </span>
-          )}
           <a
+            class={`contact-link surface-card${showLabel ? '' : ' contact-link--compact'}`}
             href={contact.href}
             target={contact.newTab ? '_blank' : undefined}
             rel={contact.newTab ? 'noopener noreferrer' : undefined}
-            aria-label={`${contact.label}：${contact.value}`}
           >
-            <span class="sr-only">{contact.label}：</span>
-            {contact.value}
+            {icon && (
+              <span class="contact-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  {icon.type === 'fill' ? (
+                    <path d={icon.d} fill="currentColor" />
+                  ) : (
+                    <path
+                      d={icon.d}
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width={icon.strokeWidth}
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  )}
+                </svg>
+              </span>
+            )}
+            {showLabel && <span class="contact-label">{contact.label}</span>}
+            <span class="contact-value">{contact.displayValue ?? contact.value}</span>
           </a>
         </li>
       );
     })}
   </ul>
 </section>
+
+<style>
+  .contact-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .contact-link {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(2.8rem, 3.2rem) minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+    padding: 0.95rem 1rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+
+  .contact-link:hover,
+  .contact-link:focus-visible {
+    color: var(--accent);
+    border-color: rgba(61, 111, 180, 0.24);
+  }
+
+  .contact-icon {
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .contact-label {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .contact-value {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--text);
+    font-size: 1.02rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .contact-link:hover .contact-value,
+  .contact-link:focus-visible .contact-value {
+    color: var(--accent);
+  }
+
+  .contact-link--compact {
+    grid-template-columns: 1.25rem max-content;
+    justify-content: start;
+  }
+
+  .contact-link--compact .contact-value {
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .contact-link {
+      grid-template-columns: 1.25rem minmax(0, 1fr);
+      grid-template-areas:
+        'icon label'
+        'icon value';
+      align-items: start;
+      gap: 0.15rem 0.85rem;
+    }
+
+    .contact-icon {
+      grid-area: icon;
+      margin-top: 0.2rem;
+    }
+
+    .contact-label {
+      grid-area: label;
+    }
+
+    .contact-value {
+      grid-area: value;
+    }
+
+    .contact-link--compact {
+      grid-template-columns: 1.25rem max-content;
+      grid-template-areas: 'icon value';
+      align-items: center;
+      gap: 0.15rem 0.85rem;
+    }
+  }
+</style>

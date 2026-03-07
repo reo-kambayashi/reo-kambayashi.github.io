@@ -6,14 +6,119 @@ type Props = {
 };
 
 const { educationHistory } = Astro.props as Props;
+const timelineItems = [...educationHistory].reverse();
 ---
-<section id="education" class="scroll-fade">
-  <h2>学歴</h2>
-  <ul>
-    {educationHistory.map((history) => (
-      <li>
-        {history.period}: {history.description}
+<section id="education" aria-labelledby="education-heading">
+  <div class="section-header section-header--rule">
+    <h2 id="education-heading">経歴</h2>
+    <div class="section-rule" aria-hidden="true"></div>
+  </div>
+  <ol class="timeline">
+    {timelineItems.map((history) => (
+      <li class="timeline-item">
+        <div class="timeline-marker" aria-hidden="true">
+          <span class="timeline-dot"></span>
+        </div>
+        <div class="timeline-body surface-card">
+          <time class="timeline-period">{history.period}</time>
+          <p class="timeline-desc">{history.description}</p>
+        </div>
       </li>
     ))}
-  </ul>
+  </ol>
 </section>
+
+<style>
+  .timeline {
+    --timeline-axis: 1.15rem;
+    --timeline-marker-size: 1.24rem;
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 0.15rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: calc(var(--timeline-marker-size) / 2 + 0.15rem);
+    bottom: calc(var(--timeline-marker-size) / 2 + 0.15rem);
+    left: calc(var(--timeline-axis) - 0.5px);
+    width: 2px;
+    background: rgba(61, 111, 180, 0.24);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: calc(var(--timeline-axis) * 2) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .timeline-marker {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.7rem;
+    z-index: 1;
+  }
+
+  .timeline-dot {
+    width: var(--timeline-marker-size);
+    height: var(--timeline-marker-size);
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    background: var(--paper);
+    position: relative;
+    outline: 0.35rem solid rgba(247, 250, 255, 0.98);
+  }
+
+  .timeline-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0.2rem;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  .timeline-body {
+    display: grid;
+    gap: 0.24rem;
+    padding: 1rem 1.1rem;
+  }
+
+  .timeline-period {
+    color: var(--accent);
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+  }
+
+  .timeline-desc {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  @media (max-width: 760px) {
+    .timeline {
+      --timeline-axis: 1rem;
+      --timeline-marker-size: 1.1rem;
+      gap: 1rem;
+    }
+
+    .timeline-item {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .timeline-dot::after {
+      inset: 0.18rem;
+    }
+
+    .timeline-body {
+      padding: 0.9rem 0.95rem;
+    }
+  }
+</style>

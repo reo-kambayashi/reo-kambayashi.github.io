@@ -1,31 +1,41 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- This Astro site renders from `src/pages/index.astro`; keep layout, content blocks, and scoped styles together there for quick review.
-- Reusable UI lives in `src/components/` (see `Welcome.astro` for structure). Share styling via component-level `<style>` blocks or extracted components.
-- Place images and SVGs in `src/assets/`; store downloadable artifacts (e.g., `cv.pdf`) inside `public/`.
-- Avoid editing the generated `dist/` directory; always regenerate via build commands instead of manual tweaks.
+- This Astro site renders a single page from `src/pages/index.astro`.
+- Content lives in `src/data/profile.ts`; update profile text, publications, education history, and contact links there before changing component markup.
+- Section components live in `src/components/sections/`:
+  `HeroSection`, `AboutSection`, `PublicationsSection`, `EducationSection`, and `ContactSection`.
+- Global layout, navigation, and shared visual tokens live in `src/layouts/SiteLayout.astro`.
+- Place images and SVGs in `src/assets/`. Do not edit generated files in `dist/`.
 
 ## Build, Test, and Development Commands
-- `npm run dev`: launches the Astro dev server at http://localhost:4321/ with hot reload.
-- `npm run build`: compiles the static site into `dist/`; run before publishing or creating a preview build.
-- `npm run preview`: serves the latest production build locally so you can validate the generated files.
+- `npm run dev`: start the Astro dev server at `http://localhost:4321`.
+- `npm run build`: build the static site into `dist/`.
+- `npm run preview`: serve the built site locally for final review.
 
 ## Coding Style & Naming Conventions
-- Use two-space indentation across Astro, HTML, and scripts.
-- Prefer kebab-case for CSS classes and IDs (e.g., `hero-section`, `primary-button`).
-- In frontmatter scripts, use camelCase for variables and PascalCase for exported components. Keep inline logic minimal and extract shared helpers into components when duplication appears.
+- Use two-space indentation in Astro, HTML, CSS, and TypeScript.
+- Keep component styles scoped unless a rule is intentionally global in `SiteLayout.astro`.
+- Prefer kebab-case for CSS classes and IDs.
+- Keep page structure simple and content-first; avoid adding decorative wrappers unless they improve readability.
+- Follow the current visual direction: white and blue base, minimal ornament, no gradients, no shadows, and restrained motion.
+
+## Content & Design Notes
+- The site is Japanese-first. Keep labels and UI copy in Japanese unless external proper nouns require English.
+- The current section order is `プロフィール / 研究・業績 / 経歴 / 連絡先`; preserve this unless the user asks to change it.
+- `EducationSection` uses a vertical timeline. When editing it, keep the marker and center line visually aligned.
+- Contact rows should read cleanly as information rows; avoid underlines, separators, or card effects that make them look noisy.
 
 ## Testing Guidelines
-- No automated tests exist yet. When adding interactive behavior, introduce Astro Test Runner and expose it via `npm run test`.
-- Place new specs under `tests/` using the `*.test.ts` suffix, grouping by component or feature.
-- Document any manual QA steps in the pull request when automated coverage is not yet available.
+- No automated tests exist yet.
+- After any code or content change, run `npm run build`.
+- For UI changes, also manually check the page in desktop and mobile widths via `npm run dev`.
 
 ## Commit & Pull Request Guidelines
-- Write commit subjects in short imperative English (≤50 characters), e.g., `add hero section`; expand with a body only if necessary.
-- Pull requests should summarize changes, link related issues, and include before/after screenshots for UI changes.
-- Call out dependency updates or configuration impacts in bullet lists so reviewers can assess deployment risk.
+- Write commit subjects in short imperative English, e.g. `refine education timeline`.
+- Pull requests should summarize the visible changes and include screenshots when layout or styling changes.
+- Mention any data-shape or content-structure changes so reviewers know whether `src/data/profile.ts` needs follow-up edits.
 
 ## Security & Configuration Tips
-- Secrets are not required today. If they become necessary, create `env.example`, add `.env` to `.gitignore`, and document variables.
-- For Astro upgrades, update `package-lock.json`, run `npm run build`, and note the version change in the pull request.
+- No secrets are required.
+- If environment variables are introduced later, add an `env.example`, ignore `.env`, and document every variable.
