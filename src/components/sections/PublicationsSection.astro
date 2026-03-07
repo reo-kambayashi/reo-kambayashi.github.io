@@ -8,7 +8,15 @@ type Props = {
 
 const { publications, selfName } = Astro.props as Props;
 ---
-<section id="research" aria-labelledby="research-heading">
+<section
+  id="research"
+  class="scroll-fade"
+  aria-labelledby="research-heading"
+  data-animate="fade-up"
+  data-animate-stagger="90"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
   <div class="section-header section-header--rule">
     <h2 id="research-heading">研究発表</h2>
     <div class="section-rule" aria-hidden="true"></div>
@@ -16,7 +24,7 @@ const { publications, selfName } = Astro.props as Props;
   <div class="publication-list">
     {publications.length > 0 ? (
       publications.map((pub) => (
-        <article class="publication-item surface-card">
+        <article class="publication-item surface-card" data-animate-item>
           <h3>{pub.title}</h3>
           <p class="publication-authors">
             {pub.authors.map((author, index) => (
@@ -58,6 +66,13 @@ const { publications, selfName } = Astro.props as Props;
     display: grid;
     gap: 0.75rem;
     padding: 1.35rem 1.4rem;
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+
+  .publication-item:hover,
+  .publication-item:focus-within {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
   }
 
   h3 {

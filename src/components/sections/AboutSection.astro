@@ -9,12 +9,19 @@ type Props = {
 
 const { description, group } = Astro.props as Props;
 ---
-<section id="about" aria-labelledby="about-heading">
+<section
+  id="about"
+  class="scroll-fade"
+  aria-labelledby="about-heading"
+  data-animate="fade-up"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
   <div class="section-header section-header--rule">
     <h2 id="about-heading">プロフィール</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
-  <div class="section-body">
+  <div class="section-body" data-animate-item>
     <p class="about-copy">
       {description}<a href={group.href} target="_blank" rel="noopener noreferrer">{group.name}</a>に所属しています。
     </p>

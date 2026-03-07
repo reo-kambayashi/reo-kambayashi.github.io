@@ -8,7 +8,15 @@ type Props = {
 
 const { contacts, contactIcons } = Astro.props as Props;
 ---
-<section id="contact" aria-labelledby="contact-heading">
+<section
+  id="contact"
+  class="scroll-fade"
+  aria-labelledby="contact-heading"
+  data-animate="fade-up"
+  data-animate-stagger="90"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
   <div class="section-header section-header--rule">
     <h2 id="contact-heading">連絡先</h2>
     <div class="section-rule" aria-hidden="true"></div>
@@ -18,7 +26,7 @@ const { contacts, contactIcons } = Astro.props as Props;
       const icon = contact.icon ? contactIcons[contact.icon] : undefined;
       const showLabel = contact.showLabel ?? true;
       return (
-        <li class="contact-item">
+        <li class="contact-item" data-animate-item>
           <a
             class={`contact-link surface-card${showLabel ? '' : ' contact-link--compact'}`}
             href={contact.href}
@@ -67,13 +75,14 @@ const { contacts, contactIcons } = Astro.props as Props;
     background: rgba(255, 255, 255, 0.78);
     color: var(--text);
     text-decoration: none;
-    transition: background-color 160ms ease, color 160ms ease;
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
   }
 
   .contact-link:hover,
   .contact-link:focus-visible {
     color: var(--accent);
     background: rgba(255, 255, 255, 0.96);
+    transform: translateY(-1px);
   }
 
   .contact-icon {

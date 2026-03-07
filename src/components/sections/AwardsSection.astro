@@ -12,7 +12,15 @@ const certificateImages = {
   yans: yansCertificate,
 };
 ---
-<section id="awards" aria-labelledby="awards-heading">
+<section
+  id="awards"
+  class="scroll-fade"
+  aria-labelledby="awards-heading"
+  data-animate="fade-up"
+  data-animate-stagger="90"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
   <div class="section-header section-header--rule">
     <h2 id="awards-heading">受賞</h2>
     <div class="section-rule" aria-hidden="true"></div>
@@ -24,7 +32,7 @@ const certificateImages = {
           award.certificateImage ? certificateImages[award.certificateImage] : undefined;
 
         return (
-          <article class="award-item surface-card">
+          <article class="award-item surface-card" data-animate-item>
             <div class="award-body">
               <h3 class="award-title">{award.title}</h3>
               {award.targetTitle && (
@@ -65,6 +73,13 @@ const certificateImages = {
     gap: 1.25rem;
     align-items: start;
     padding: 1.25rem 1.3rem;
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+
+  .award-item:hover,
+  .award-item:focus-within {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
   }
 
   .award-body {

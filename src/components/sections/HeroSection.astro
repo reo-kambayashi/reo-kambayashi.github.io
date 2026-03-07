@@ -15,23 +15,29 @@ type Props = {
 const { profileSummary } = Astro.props as Props;
 ---
 <section id="top" class="hero" aria-labelledby="hero-name">
-  <div class="hero-shell">
-    <div class="hero-mark">
+  <div
+    class="hero-shell scroll-fade"
+    data-animate="fade-up"
+    data-animate-translate-y="12px"
+    data-animate-duration="420ms"
+    data-animate-stagger="90"
+  >
+    <div class="hero-mark" data-animate-item>
       <div class="hero-logo-wrap">
         <Image src={logo} alt="Tohoku NLP Group" class="hero-logo" width={90} height={81} />
       </div>
       <p class="hero-mark-label">坂口・乾研究室</p>
     </div>
     <div class="hero-copy">
-      <p class="hero-kicker">プロフィール</p>
-      <div class="hero-title-block">
+      <p class="hero-kicker" data-animate-item>プロフィール</p>
+      <div class="hero-title-block" data-animate-item>
         <h1 id="hero-name" class="hero-name">{profileSummary.name}</h1>
         <p class="hero-affiliation">
           <span class="hero-affiliation-label">{profileSummary.affiliationLabel}</span>
           <span class="hero-affiliation-value">{profileSummary.affiliationValue}</span>
         </p>
       </div>
-      <dl class="hero-meta" aria-label="基本情報">
+      <dl class="hero-meta" aria-label="基本情報" data-animate-item>
         <div class="hero-meta-row">
           <dt>{profileSummary.researchAreaLabel}</dt>
           <dd class="hero-meta-value">{profileSummary.researchAreaValue}</dd>

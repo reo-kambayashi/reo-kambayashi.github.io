@@ -8,14 +8,22 @@ type Props = {
 const { educationHistory } = Astro.props as Props;
 const timelineItems = [...educationHistory].reverse();
 ---
-<section id="education" aria-labelledby="education-heading">
+<section
+  id="education"
+  class="scroll-fade"
+  aria-labelledby="education-heading"
+  data-animate="fade-up"
+  data-animate-stagger="90"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
   <div class="section-header section-header--rule">
     <h2 id="education-heading">経歴</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <ol class="timeline">
     {timelineItems.map((history) => (
-      <li class="timeline-item">
+      <li class="timeline-item" data-animate-item>
         <div class="timeline-marker" aria-hidden="true">
           <span class="timeline-dot"></span>
         </div>

@@ -1,5 +1,6 @@
 ---
 import { sectionLinks } from '../data/profile';
+import ScrollFadeScript from '../components/scripts/ScrollFadeScript.astro';
 
 type Props = {
   title: string;
@@ -21,6 +22,9 @@ const { title, description } = Astro.props as Props;
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -218,6 +222,42 @@ const { title, description } = Astro.props as Props;
         border-radius: 18px;
       }
 
+      .js .scroll-fade {
+        opacity: 0;
+        transform: translate3d(var(--animate-translate-x, 0px), var(--animate-translate-y, 16px), 0)
+          scale(var(--animate-scale, 1));
+        transition:
+          opacity var(--animate-duration-opacity, 420ms) var(--animate-ease-opacity, ease-out)
+            var(--animate-delay, 0ms),
+          transform var(--animate-duration, 480ms)
+            var(--animate-ease-transform, cubic-bezier(0.22, 0.61, 0.36, 1))
+            var(--animate-delay, 0ms);
+        will-change: transform, opacity;
+      }
+
+      .js .scroll-fade.is-visible {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        will-change: auto;
+      }
+
+      .js .scroll-fade [data-animate-item] {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+        transition:
+          opacity var(--animate-child-duration, 340ms)
+            var(--animate-child-easing, cubic-bezier(0.22, 0.61, 0.36, 1))
+            var(--animate-child-delay, 0ms),
+          transform var(--animate-child-duration, 340ms)
+            var(--animate-child-easing, cubic-bezier(0.22, 0.61, 0.36, 1))
+            var(--animate-child-delay, 0ms);
+      }
+
+      .js .scroll-fade.is-visible [data-animate-item] {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
       .site-nav {
         position: sticky;
         top: 0.4rem;
@@ -345,6 +385,14 @@ const { title, description } = Astro.props as Props;
         html {
           scroll-behavior: auto;
         }
+
+        .js .scroll-fade,
+        .js .scroll-fade [data-animate-item] {
+          opacity: 1;
+          transform: none;
+          transition: none;
+          will-change: auto;
+        }
       }
     </style>
   </head>
@@ -368,9 +416,11 @@ const { title, description } = Astro.props as Props;
       <slot />
     </main>
     <slot name="scripts" />
+    <ScrollFadeScript />
     <script is:inline>
       const initSectionNav = () => {
         const links = Array.from(document.querySelectorAll('.nav-link'));
+        const nav = document.querySelector('.site-nav');
         const sectionMap = new Map(
           links.map((link) => {
             const href = link.getAttribute('href') ?? '';
@@ -385,6 +435,8 @@ const { title, description } = Astro.props as Props;
           return;
         }
 
+        let frameId = 0;
+
         const setActive = (id) => {
           links.forEach((link) => {
             const isActive = link.getAttribute('href') === `#${id}`;
@@ -397,31 +449,75 @@ const { title, description } = Astro.props as Props;
           });
         };
 
-        const hash = window.location.hash.replace('#', '');
-        setActive(hash || sections[0].id);
+        const getReferenceLine = () => {
+          const navRect = nav instanceof HTMLElement ? nav.getBoundingClientRect() : null;
+          const navBottom = navRect ? navRect.bottom : 0;
+          return navBottom + 24;
+        };
 
-        const observer = new IntersectionObserver(
-          (entries) => {
-            const visible = entries
-              .filter((entry) => entry.isIntersecting)
-              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const getActiveSectionId = () => {
+          const referenceLine = getReferenceLine();
+          let activeSection = sections[0];
+          let closestSection = sections[0];
+          let closestDistance = Number.POSITIVE_INFINITY;
 
-            if (visible) {
-              setActive(visible.target.id);
+          sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+            const topDistance = Math.abs(rect.top - referenceLine);
+
+            if (topDistance < closestDistance) {
+              closestDistance = topDistance;
+              closestSection = section;
             }
-          },
-          {
-            rootMargin: '-30% 0px -48% 0px',
-            threshold: [0.2, 0.35, 0.6],
-          }
-        );
 
-        sections.forEach((section) => observer.observe(section));
+            if (rect.top <= referenceLine && rect.bottom > referenceLine) {
+              activeSection = section;
+            }
+          });
+
+          const nearBottom =
+            window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+          if (nearBottom) {
+            return sections[sections.length - 1].id;
+          }
+
+          return (activeSection ?? closestSection).id;
+        };
+
+        const syncActiveSection = () => {
+          frameId = 0;
+          setActive(getActiveSectionId());
+        };
+
+        const scheduleSync = () => {
+          if (frameId) {
+            return;
+          }
+
+          frameId = window.requestAnimationFrame(syncActiveSection);
+        };
+
+        const hash = window.location.hash.replace('#', '');
+        if (hash && sectionMap.has(hash)) {
+          setActive(hash);
+        } else {
+          setActive(sections[0].id);
+          scheduleSync();
+        }
+
+        window.addEventListener('scroll', scheduleSync, { passive: true });
+        window.addEventListener('resize', scheduleSync, { passive: true });
+        window.addEventListener('load', scheduleSync, { once: true });
         window.addEventListener('hashchange', () => {
           const currentHash = window.location.hash.replace('#', '');
-          if (currentHash) {
+          if (currentHash && sectionMap.has(currentHash)) {
             setActive(currentHash);
+            scheduleSync();
+            return;
           }
+
+          scheduleSync();
         });
       };
 
