@@ -139,6 +139,7 @@ export const contacts: Contact[] = [
     href: 'mailto:kambayashi.reo.t6@dc.tohoku.ac.jp',
     newTab: false,
     icon: 'mail',
+    showLabel: false,
   },
   {
     label: 'X',

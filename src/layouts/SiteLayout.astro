@@ -31,19 +31,19 @@ const { title, description } = Astro.props as Props;
       :root {
         --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
         --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-        --page-bg: #e8f0fd;
+        --page-bg: #eaf1fb;
         --paper: rgba(255, 255, 255, 0.94);
-        --surface: rgba(248, 251, 255, 0.92);
-        --surface-soft: rgba(255, 255, 255, 0.98);
-        --section-surface: rgba(251, 253, 255, 0.92);
-        --section-surface-alt: rgba(245, 249, 255, 0.9);
+        --surface: rgba(247, 250, 255, 0.94);
+        --surface-soft: rgba(255, 255, 255, 0.99);
+        --section-surface: rgba(251, 253, 255, 0.94);
+        --section-surface-alt: rgba(246, 250, 255, 0.92);
         --text: #1f2328;
         --text-strong: #14181d;
         --muted: #5f6f88;
         --accent: #3d6fb4;
         --accent-strong: #2755a5;
-        --border: rgba(61, 111, 180, 0.18);
-        --surface-border: rgba(61, 111, 180, 0.14);
+        --border: rgba(31, 35, 40, 0.08);
+        --surface-border: rgba(31, 35, 40, 0.06);
         --max-width: 1120px;
         --page-gutter: clamp(0.75rem, 2vw, 1.5rem);
         --section-px: clamp(1.4rem, 4vw, 3.25rem);
@@ -84,21 +84,11 @@ const { title, description } = Astro.props as Props;
         max-width: var(--max-width);
         margin: 0 auto;
         background: var(--paper);
-        border: 1px solid rgba(61, 111, 180, 0.16);
         border-radius: 24px;
         overflow: hidden;
         position: relative;
         display: flex;
         flex-direction: column;
-      }
-
-      main.wrap::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border: 1px solid rgba(255, 255, 255, 0.62);
-        border-radius: inherit;
-        pointer-events: none;
       }
 
       section {
@@ -147,7 +137,7 @@ const { title, description } = Astro.props as Props;
         font-size: 0.98rem;
         font-weight: 700;
         letter-spacing: 0.12em;
-        color: var(--accent);
+        color: var(--text-strong);
       }
 
       h2::before {
@@ -220,12 +210,11 @@ const { title, description } = Astro.props as Props;
 
       .section-rule {
         height: 1px;
-        background: linear-gradient(90deg, rgba(61, 111, 180, 0.26), rgba(61, 111, 180, 0.08));
+        background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.04));
       }
 
       .surface-card {
         background: var(--surface-soft);
-        border: 1px solid var(--surface-border);
         border-radius: 18px;
       }
 
@@ -246,7 +235,6 @@ const { title, description } = Astro.props as Props;
         gap: 0.4rem;
         padding: 0.45rem;
         background: rgba(255, 255, 255, 0.84);
-        border: 1px solid rgba(61, 111, 180, 0.14);
         border-radius: 999px;
         width: fit-content;
         max-width: 100%;

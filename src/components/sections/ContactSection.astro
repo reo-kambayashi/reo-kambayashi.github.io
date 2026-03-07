@@ -64,15 +64,16 @@ const { contacts, contactIcons } = Astro.props as Props;
     gap: 0.9rem;
     align-items: center;
     padding: 0.95rem 1rem;
+    background: rgba(255, 255, 255, 0.78);
     color: var(--text);
     text-decoration: none;
-    transition: border-color 160ms ease, color 160ms ease;
+    transition: background-color 160ms ease, color 160ms ease;
   }
 
   .contact-link:hover,
   .contact-link:focus-visible {
     color: var(--accent);
-    border-color: rgba(61, 111, 180, 0.24);
+    background: rgba(255, 255, 255, 0.96);
   }
 
   .contact-icon {
