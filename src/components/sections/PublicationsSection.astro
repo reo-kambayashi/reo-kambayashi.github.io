@@ -121,6 +121,17 @@ const { publications, selfName } = Astro.props as Props;
     padding-top: 0.1rem;
   }
 
+  .publication-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.1rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(61, 111, 180, 0.14);
+    border-radius: 999px;
+    background: rgba(61, 111, 180, 0.04);
+    text-decoration: none;
+  }
+
   .publication-empty {
     color: var(--muted);
   }
@@ -128,6 +139,33 @@ const { publications, selfName } = Astro.props as Props;
   @media (max-width: 760px) {
     .publication-item {
       padding: 1.2rem 1.1rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .publication-item {
+      gap: 0.7rem;
+      padding: 1rem 0.95rem;
+    }
+
+    .publication-authors,
+    .publication-venue {
+      font-size: 0.93rem;
+    }
+
+    .publication-meta {
+      display: grid;
+      gap: 0.45rem;
+      align-items: start;
+    }
+
+    .publication-links {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .publication-links a {
+      width: fit-content;
     }
   }
 </style>

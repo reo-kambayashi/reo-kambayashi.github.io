@@ -33,4 +33,16 @@ const { description, group } = Astro.props as Props;
     white-space: nowrap;
     font-weight: 600;
   }
+
+  @media (max-width: 480px) {
+    .about-copy {
+      font-size: 1rem;
+      line-height: 1.84;
+    }
+
+    .about-copy a {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+  }
 </style>

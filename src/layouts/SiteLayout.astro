@@ -107,6 +107,7 @@ const { title, description } = Astro.props as Props;
         gap: var(--section-gap);
         padding: var(--section-py) var(--section-px);
         position: relative;
+        scroll-margin-top: 6rem;
       }
 
       main.wrap > section:not(.hero) {
@@ -252,6 +253,10 @@ const { title, description } = Astro.props as Props;
         margin: 0 auto;
       }
 
+      .nav-item {
+        flex: 0 0 auto;
+      }
+
       .nav-link {
         color: var(--muted);
         text-decoration: none;
@@ -261,7 +266,7 @@ const { title, description } = Astro.props as Props;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 2.3rem;
+        min-height: 2.45rem;
         padding: 0.35rem 0.95rem;
         border-radius: 999px;
         transition: background-color 160ms ease, color 160ms ease;
@@ -279,22 +284,72 @@ const { title, description } = Astro.props as Props;
       }
 
       @media (max-width: 640px) {
+        :root {
+          --page-gutter: 0.45rem;
+          --section-px: 1rem;
+          --section-py: 1.2rem;
+          --section-gap: 0.8rem;
+          --font-size-base: 0.95rem;
+        }
+
         body {
-          padding: 0.6rem;
+          padding: var(--page-gutter);
         }
 
         main.wrap {
-          border-radius: 20px;
+          border-radius: 18px;
         }
 
         .site-nav {
-          padding-top: 0.65rem;
+          top: 0;
+          margin-bottom: 0.6rem;
+          padding: 0.45rem 0 0.35rem;
         }
 
         .nav-list {
           width: 100%;
-          gap: 0.25rem;
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          gap: 0.3rem;
+          padding: 0.35rem;
           border-radius: 18px;
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+
+        .nav-list::-webkit-scrollbar {
+          display: none;
+        }
+
+        .nav-link {
+          min-height: 2.3rem;
+          padding: 0.35rem 0.85rem;
+          font-size: 0.89rem;
+        }
+
+        .section-header--rule {
+          gap: 0.7rem;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .section-header--rule {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        .section-rule {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 420px) {
+        :root {
+          --page-gutter: 0.3rem;
+          --section-px: 0.85rem;
+          --section-py: 1.05rem;
         }
       }
 
