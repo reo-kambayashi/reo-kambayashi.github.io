@@ -1,12 +1,19 @@
 ---
-import type { Education } from '../../data/profile';
+import {
+  educationSectionContent,
+  resolveLocalizedText,
+  type Education,
+  type Locale,
+} from '../../data/profile';
 
 type Props = {
+  locale: Locale;
   educationHistory: Education[];
 };
 
-const { educationHistory } = Astro.props as Props;
+const { locale, educationHistory } = Astro.props as Props;
 const timelineItems = [...educationHistory].reverse();
+const heading = resolveLocalizedText(educationSectionContent.heading, locale);
 ---
 <section
   id="education"
@@ -18,7 +25,7 @@ const timelineItems = [...educationHistory].reverse();
   data-animate-duration="420ms"
 >
   <div class="section-header section-header--rule">
-    <h2 id="education-heading">経歴</h2>
+    <h2 id="education-heading">{heading}</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <ol class="timeline">
@@ -28,8 +35,8 @@ const timelineItems = [...educationHistory].reverse();
           <span class="timeline-dot"></span>
         </div>
         <div class="timeline-body surface-card">
-          <time class="timeline-period">{history.period}</time>
-          <p class="timeline-desc">{history.description}</p>
+          <time class="timeline-period">{resolveLocalizedText(history.period, locale)}</time>
+          <p class="timeline-desc">{resolveLocalizedText(history.description, locale)}</p>
         </div>
       </li>
     ))}

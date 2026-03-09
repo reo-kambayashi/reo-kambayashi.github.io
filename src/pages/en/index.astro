@@ -1,11 +1,11 @@
 ---
-import SiteLayout from '../layouts/SiteLayout.astro';
-import HeroSection from '../components/sections/HeroSection.astro';
-import AboutSection from '../components/sections/AboutSection.astro';
-import PublicationsSection from '../components/sections/PublicationsSection.astro';
-import AwardsSection from '../components/sections/AwardsSection.astro';
-import EducationSection from '../components/sections/EducationSection.astro';
-import ContactSection from '../components/sections/ContactSection.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import HeroSection from '../../components/sections/HeroSection.astro';
+import AboutSection from '../../components/sections/AboutSection.astro';
+import PublicationsSection from '../../components/sections/PublicationsSection.astro';
+import AwardsSection from '../../components/sections/AwardsSection.astro';
+import EducationSection from '../../components/sections/EducationSection.astro';
+import ContactSection from '../../components/sections/ContactSection.astro';
 import {
   siteMeta,
   profileSummary,
@@ -16,9 +16,9 @@ import {
   contacts,
   contactIcons,
   resolveLocalizedText,
-} from '../data/profile';
+} from '../../data/profile';
 
-const locale = 'ja';
+const locale = 'en';
 const title = resolveLocalizedText(siteMeta.title, locale);
 const description = resolveLocalizedText(siteMeta.description, locale);
 ---

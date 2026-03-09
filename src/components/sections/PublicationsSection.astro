@@ -1,12 +1,22 @@
 ---
-import type { Publication } from '../../data/profile';
+import {
+  publicationSectionContent,
+  resolveLocalizedText,
+  type Locale,
+  type Publication,
+} from '../../data/profile';
 
 type Props = {
+  locale: Locale;
   publications: Publication[];
   selfName?: string;
 };
 
-const { publications, selfName } = Astro.props as Props;
+const { locale, publications, selfName } = Astro.props as Props;
+const heading = resolveLocalizedText(publicationSectionContent.heading, locale);
+const emptyMessage = resolveLocalizedText(publicationSectionContent.empty, locale);
+const linksLabel = resolveLocalizedText(publicationSectionContent.linksLabel, locale);
+const authorSeparator = resolveLocalizedText(publicationSectionContent.authorSeparator, locale);
 ---
 <section
   id="research"
@@ -18,32 +28,34 @@ const { publications, selfName } = Astro.props as Props;
   data-animate-duration="420ms"
 >
   <div class="section-header section-header--rule">
-    <h2 id="research-heading">研究発表</h2>
+    <h2 id="research-heading">{heading}</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <div class="publication-list">
     {publications.length > 0 ? (
       publications.map((pub) => (
         <article class="publication-item surface-card" data-animate-item>
-          <h3>{pub.title}</h3>
+          <h3>{resolveLocalizedText(pub.title, locale)}</h3>
           <p class="publication-authors">
             {pub.authors.map((author, index) => (
               <>
-                {index > 0 && '、'}
+                {index > 0 && authorSeparator}
                 {selfName && author === selfName ? <strong>{author}</strong> : author}
               </>
             ))}
           </p>
           <div class="publication-meta">
-            <p class="publication-venue">{pub.venue}</p>
-            {pub.type && <p class="publication-type">{pub.type}</p>}
+            <p class="publication-venue">{resolveLocalizedText(pub.venue, locale)}</p>
+            {pub.type && <p class="publication-type">{resolveLocalizedText(pub.type, locale)}</p>}
           </div>
-          {pub.note && <p class="publication-note">{pub.note}</p>}
+          {pub.note && <p class="publication-note">{resolveLocalizedText(pub.note, locale)}</p>}
           {pub.links && pub.links.length > 0 && (
-            <ul class="publication-links" aria-label="関連リンク">
+            <ul class="publication-links" aria-label={linksLabel}>
               {pub.links.map((link) => (
                 <li>
-                  <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {resolveLocalizedText(link.label, locale)}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -51,7 +63,7 @@ const { publications, selfName } = Astro.props as Props;
         </article>
       ))
     ) : (
-      <p class="publication-empty">発表情報は現在準備中です。</p>
+      <p class="publication-empty">{emptyMessage}</p>
     )}
   </div>
 </section>

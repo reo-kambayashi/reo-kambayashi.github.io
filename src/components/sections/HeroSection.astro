@@ -1,18 +1,27 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../../assets/logo-desktop-dark+.svg';
+import {
+  resolveLocalizedText,
+  type Locale,
+  type ProfileSummary,
+} from '../../data/profile';
 
 type Props = {
-  profileSummary: {
-    name: string;
-    affiliationLabel: string;
-    affiliationValue: string;
-    researchAreaLabel: string;
-    researchAreaValue: string;
-  };
+  locale: Locale;
+  profileSummary: ProfileSummary;
 };
 
-const { profileSummary } = Astro.props as Props;
+const { locale, profileSummary } = Astro.props as Props;
+const name = resolveLocalizedText(profileSummary.name, locale);
+const heroLogoAlt = resolveLocalizedText(profileSummary.heroLogoAlt, locale);
+const heroMarkLabel = resolveLocalizedText(profileSummary.heroMarkLabel, locale);
+const heroKicker = resolveLocalizedText(profileSummary.heroKicker, locale);
+const affiliationLabel = resolveLocalizedText(profileSummary.affiliationLabel, locale);
+const affiliationValue = resolveLocalizedText(profileSummary.affiliationValue, locale);
+const researchAreaLabel = resolveLocalizedText(profileSummary.researchAreaLabel, locale);
+const researchAreaValue = resolveLocalizedText(profileSummary.researchAreaValue, locale);
+const basicInfoLabel = resolveLocalizedText(profileSummary.basicInfoLabel, locale);
 ---
 <section id="top" class="hero" aria-labelledby="hero-name">
   <div
@@ -24,23 +33,23 @@ const { profileSummary } = Astro.props as Props;
   >
     <div class="hero-mark" data-animate-item>
       <div class="hero-logo-wrap">
-        <Image src={logo} alt="Tohoku NLP Group" class="hero-logo" width={90} height={81} />
+        <Image src={logo} alt={heroLogoAlt} class="hero-logo" width={90} height={81} />
       </div>
-      <p class="hero-mark-label">坂口・乾研究室</p>
+      <p class="hero-mark-label">{heroMarkLabel}</p>
     </div>
     <div class="hero-copy">
-      <p class="hero-kicker" data-animate-item>プロフィール</p>
+      <p class="hero-kicker" data-animate-item>{heroKicker}</p>
       <div class="hero-title-block" data-animate-item>
-        <h1 id="hero-name" class="hero-name">{profileSummary.name}</h1>
+        <h1 id="hero-name" class="hero-name">{name}</h1>
         <p class="hero-affiliation">
-          <span class="hero-affiliation-label">{profileSummary.affiliationLabel}</span>
-          <span class="hero-affiliation-value">{profileSummary.affiliationValue}</span>
+          <span class="hero-affiliation-label">{affiliationLabel}</span>
+          <span class="hero-affiliation-value">{affiliationValue}</span>
         </p>
       </div>
-      <dl class="hero-meta" aria-label="基本情報" data-animate-item>
+      <dl class="hero-meta" aria-label={basicInfoLabel} data-animate-item>
         <div class="hero-meta-row">
-          <dt>{profileSummary.researchAreaLabel}</dt>
-          <dd class="hero-meta-value">{profileSummary.researchAreaValue}</dd>
+          <dt>{researchAreaLabel}</dt>
+          <dd class="hero-meta-value">{researchAreaValue}</dd>
         </div>
       </dl>
     </div>

@@ -1,16 +1,26 @@
 ---
 import { Image } from 'astro:assets';
 import yansCertificate from '../../assets/YANS_certificate.jpg';
-import type { Award } from '../../data/profile';
+import {
+  awardSectionContent,
+  resolveLocalizedText,
+  type Award,
+  type Locale,
+} from '../../data/profile';
 
 type Props = {
+  locale: Locale;
   awards: Award[];
 };
 
-const { awards } = Astro.props as Props;
+const { locale, awards } = Astro.props as Props;
 const certificateImages = {
   yans: yansCertificate,
 };
+const heading = resolveLocalizedText(awardSectionContent.heading, locale);
+const targetLabel = resolveLocalizedText(awardSectionContent.targetLabel, locale);
+const emptyMessage = resolveLocalizedText(awardSectionContent.empty, locale);
+const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCertificateAlt, locale);
 ---
 <section
   id="awards"
@@ -22,7 +32,7 @@ const certificateImages = {
   data-animate-duration="420ms"
 >
   <div class="section-header section-header--rule">
-    <h2 id="awards-heading">受賞</h2>
+    <h2 id="awards-heading">{heading}</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <div class="award-list">
@@ -34,19 +44,28 @@ const certificateImages = {
         return (
           <article class="award-item surface-card" data-animate-item>
             <div class="award-body">
-              <h3 class="award-title">{award.title}</h3>
+              <h3 class="award-title">{resolveLocalizedText(award.title, locale)}</h3>
               {award.targetTitle && (
                 <p class="award-detail">
-                  <span class="award-detail-label">対象発表:</span> {award.targetTitle}
+                  <span class="award-detail-label">{targetLabel}:</span>{' '}
+                  {resolveLocalizedText(award.targetTitle, locale)}
                 </p>
               )}
-              {award.result && <p class="award-detail award-detail--result">{award.result}</p>}
+              {award.result && (
+                <p class="award-detail award-detail--result">
+                  {resolveLocalizedText(award.result, locale)}
+                </p>
+              )}
             </div>
             {certificate && (
               <div class="award-certificate">
                 <Image
                   src={certificate}
-                  alt={award.certificateAlt ?? '受賞賞状'}
+                  alt={
+                    award.certificateAlt
+                      ? resolveLocalizedText(award.certificateAlt, locale)
+                      : defaultCertificateAlt
+                  }
                   width={112}
                   class="award-certificate-image"
                 />
@@ -56,7 +75,7 @@ const certificateImages = {
         );
       })
     ) : (
-      <p class="award-empty">受賞情報は現在準備中です。</p>
+      <p class="award-empty">{emptyMessage}</p>
     )}
   </div>
 </section>

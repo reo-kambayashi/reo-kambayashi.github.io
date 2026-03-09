@@ -1,12 +1,21 @@
 ---
-import type { Contact, ContactIcon, ContactIconKey } from '../../data/profile';
+import {
+  contactSectionContent,
+  resolveLocalizedText,
+  type Contact,
+  type ContactIcon,
+  type ContactIconKey,
+  type Locale,
+} from '../../data/profile';
 
 type Props = {
+  locale: Locale;
   contacts: Contact[];
   contactIcons: Record<ContactIconKey, ContactIcon>;
 };
 
-const { contacts, contactIcons } = Astro.props as Props;
+const { locale, contacts, contactIcons } = Astro.props as Props;
+const heading = resolveLocalizedText(contactSectionContent.heading, locale);
 ---
 <section
   id="contact"
@@ -18,7 +27,7 @@ const { contacts, contactIcons } = Astro.props as Props;
   data-animate-duration="420ms"
 >
   <div class="section-header section-header--rule">
-    <h2 id="contact-heading">連絡先</h2>
+    <h2 id="contact-heading">{heading}</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <ul class="contact-list">
@@ -51,7 +60,9 @@ const { contacts, contactIcons } = Astro.props as Props;
                 </svg>
               </span>
             )}
-            {showLabel && <span class="contact-label">{contact.label}</span>}
+            {showLabel && (
+              <span class="contact-label">{resolveLocalizedText(contact.label, locale)}</span>
+            )}
             <span class="contact-value">{contact.displayValue ?? contact.value}</span>
           </a>
         </li>

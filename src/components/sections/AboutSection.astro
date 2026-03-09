@@ -1,13 +1,22 @@
 ---
+import {
+  resolveLocalizedText,
+  type About,
+  type Locale,
+} from '../../data/profile';
+
 type Props = {
-  description: string;
-  group: {
-    name: string;
-    href: string;
-  };
+  locale: Locale;
+  about: About;
 };
 
-const { description, group } = Astro.props as Props;
+const { locale, about } = Astro.props as Props;
+const heading = resolveLocalizedText(about.heading, locale);
+const description = resolveLocalizedText(about.description, locale);
+const membershipPrefix = resolveLocalizedText(about.membershipPrefix, locale);
+const membershipSuffix = resolveLocalizedText(about.membershipSuffix, locale);
+const aboutLeadText =
+  locale === 'en' ? `${description} ${membershipPrefix}` : description;
 ---
 <section
   id="about"
@@ -18,12 +27,12 @@ const { description, group } = Astro.props as Props;
   data-animate-duration="420ms"
 >
   <div class="section-header section-header--rule">
-    <h2 id="about-heading">プロフィール</h2>
+    <h2 id="about-heading">{heading}</h2>
     <div class="section-rule" aria-hidden="true"></div>
   </div>
   <div class="section-body" data-animate-item>
     <p class="about-copy">
-      {description}<a href={group.href} target="_blank" rel="noopener noreferrer">{group.name}</a>に所属しています。
+      {aboutLeadText}<a href={about.group.href} target="_blank" rel="noopener noreferrer">{about.group.name}</a>{membershipSuffix}
     </p>
   </div>
 </section>

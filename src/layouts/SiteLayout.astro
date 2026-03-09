@@ -1,16 +1,33 @@
 ---
-import { sectionLinks } from '../data/profile';
+import {
+  layoutContent,
+  resolveLocalizedText,
+  sectionLinks,
+  type Locale,
+} from '../data/profile';
 import ScrollFadeScript from '../components/scripts/ScrollFadeScript.astro';
 
 type Props = {
+  locale: Locale;
   title: string;
   description: string;
 };
 
-const { title, description } = Astro.props as Props;
+const { locale, title, description } = Astro.props as Props;
+const localizedSectionLinks = sectionLinks.map((link) => ({
+  ...link,
+  label: resolveLocalizedText(link.label, locale),
+}));
+const navAriaLabel = resolveLocalizedText(layoutContent.navAriaLabel, locale);
+const languageSwitcherLabel = resolveLocalizedText(layoutContent.languageSwitcherLabel, locale);
+const japaneseLabel = resolveLocalizedText(layoutContent.japaneseLabel, locale);
+const englishLabel = resolveLocalizedText(layoutContent.englishLabel, locale);
+const basePath = import.meta.env.BASE_URL;
+const japanesePath = basePath;
+const englishPath = `${basePath.replace(/\/$/, '')}/en`;
 ---
 <!doctype html>
-<html lang="ja">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -258,7 +275,7 @@ const { title, description } = Astro.props as Props;
         transform: translate3d(0, 0, 0);
       }
 
-      .site-nav {
+      .site-nav-shell {
         position: sticky;
         top: 0.4rem;
         z-index: 10;
@@ -266,6 +283,55 @@ const { title, description } = Astro.props as Props;
         margin: 0 auto 0.9rem;
         padding: 0.9rem var(--page-gutter) 0.6rem;
         backdrop-filter: blur(8px);
+      }
+
+      .language-switcher {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 0.45rem;
+      }
+
+      .language-switcher-inner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.3rem 0.45rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+      }
+
+      .language-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 1.9rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color 160ms ease, color 160ms ease;
+      }
+
+      .language-link:hover,
+      .language-link:focus-visible {
+        background: rgba(61, 111, 180, 0.1);
+        color: var(--accent-strong);
+      }
+
+      .language-link.is-current {
+        background: rgba(61, 111, 180, 0.16);
+        color: var(--accent-strong);
+      }
+
+      .language-divider {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .site-nav {
+        display: flex;
+        justify-content: center;
       }
 
       .nav-list {
@@ -328,10 +394,25 @@ const { title, description } = Astro.props as Props;
           border-radius: 18px;
         }
 
-        .site-nav {
+        .site-nav-shell {
           top: 0;
           margin-bottom: 0.6rem;
           padding: 0.45rem 0 0.35rem;
+        }
+
+        .language-switcher {
+          margin-bottom: 0.35rem;
+          padding: 0 0.1rem;
+        }
+
+        .language-switcher-inner {
+          gap: 0.35rem;
+          padding: 0.28rem 0.38rem;
+        }
+
+        .language-link {
+          min-height: 1.8rem;
+          font-size: 0.82rem;
         }
 
         .nav-list {
@@ -397,21 +478,48 @@ const { title, description } = Astro.props as Props;
     </style>
   </head>
   <body>
-    <nav class="site-nav" aria-label="ページ内ナビゲーション">
-      <ul class="nav-list">
-        {sectionLinks.map((link, index) => (
-          <li class="nav-item">
-            <a
-              href={link.href}
-              class:list={['nav-link', index === 0 && 'is-active']}
-              aria-current={index === 0 ? 'location' : undefined}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div class="site-nav-shell">
+      <div class="language-switcher" role="group" aria-label={languageSwitcherLabel}>
+        <div class="language-switcher-inner">
+          {locale === 'ja' ? (
+            <>
+              <span class="language-link is-current" lang="ja" aria-current="page">
+                {japaneseLabel}
+              </span>
+              <span class="language-divider" aria-hidden="true">/</span>
+              <a class="language-link" href={englishPath} lang="en">
+                {englishLabel}
+              </a>
+            </>
+          ) : (
+            <>
+              <a class="language-link" href={japanesePath} lang="ja">
+                {japaneseLabel}
+              </a>
+              <span class="language-divider" aria-hidden="true">/</span>
+              <span class="language-link is-current" lang="en" aria-current="page">
+                {englishLabel}
+              </span>
+            </>
+          )}
+        </div>
+      </div>
+      <nav class="site-nav" aria-label={navAriaLabel}>
+        <ul class="nav-list">
+          {localizedSectionLinks.map((link, index) => (
+            <li class="nav-item">
+              <a
+                href={link.href}
+                class:list={['nav-link', index === 0 && 'is-active']}
+                aria-current={index === 0 ? 'location' : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
     <main class="wrap">
       <slot />
     </main>
@@ -420,7 +528,7 @@ const { title, description } = Astro.props as Props;
     <script is:inline>
       const initSectionNav = () => {
         const links = Array.from(document.querySelectorAll('.nav-link'));
-        const nav = document.querySelector('.site-nav');
+        const nav = document.querySelector('.site-nav-shell');
         const sectionMap = new Map(
           links.map((link) => {
             const href = link.getAttribute('href') ?? '';
