@@ -37,7 +37,7 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
       return (
         <li class="contact-item" data-animate-item>
           <a
-            class={`contact-link surface-card${showLabel ? '' : ' contact-link--compact'}`}
+            class={`contact-link${showLabel ? '' : ' contact-link--compact'}`}
             href={contact.href}
             target={contact.newTab ? '_blank' : undefined}
             rel={contact.newTab ? 'noopener noreferrer' : undefined}
@@ -73,27 +73,27 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
 
 <style>
   .contact-list {
-    display: grid;
-    gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .contact-link {
     display: grid;
-    grid-template-columns: 1.25rem minmax(2.8rem, 3.2rem) minmax(0, 1fr);
-    gap: 0.9rem;
+    grid-template-columns: 1.1rem minmax(4.5rem, 5rem) minmax(0, 1fr);
+    gap: 0.8rem;
     align-items: center;
-    padding: 0.95rem 1rem;
-    background: rgba(255, 255, 255, 0.78);
+    padding: 1.1rem 0;
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--border);
     color: var(--text);
     text-decoration: none;
-    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    transition: color 120ms ease;
   }
 
   .contact-link:hover,
   .contact-link:focus-visible {
-    color: var(--accent);
-    background: rgba(255, 255, 255, 0.96);
-    transform: translateY(-1px);
+    color: var(--muted);
   }
 
   .contact-icon {
@@ -104,14 +104,15 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
   }
 
   .contact-icon svg {
-    width: 1rem;
-    height: 1rem;
+    width: 0.95rem;
+    height: 0.95rem;
   }
 
   .contact-label {
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
+    letter-spacing: 0.04em;
     text-decoration: none;
   }
 
@@ -119,18 +120,13 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
     min-width: 0;
     overflow-wrap: anywhere;
     color: var(--text);
-    font-size: 1.02rem;
-    font-weight: 600;
+    font-size: 0.97rem;
+    font-weight: 500;
     text-decoration: none;
   }
 
-  .contact-link:hover .contact-value,
-  .contact-link:focus-visible .contact-value {
-    color: var(--accent);
-  }
-
   .contact-link--compact {
-    grid-template-columns: 1.25rem max-content;
+    grid-template-columns: 1.1rem max-content;
     justify-content: start;
   }
 
@@ -142,13 +138,12 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
 
   @media (max-width: 640px) {
     .contact-link {
-      grid-template-columns: 1.25rem minmax(0, 1fr);
+      grid-template-columns: 1.1rem minmax(0, 1fr);
       grid-template-areas:
         'icon label'
         'icon value';
       align-items: start;
-      gap: 0.15rem 0.75rem;
-      padding: 1rem 0.95rem;
+      gap: 0.12rem 0.7rem;
     }
 
     .contact-icon {
@@ -162,25 +157,15 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
 
     .contact-value {
       grid-area: value;
-      font-size: 0.98rem;
+      font-size: 0.93rem;
       line-height: 1.6;
     }
 
     .contact-link--compact {
-      grid-template-columns: 1.25rem max-content;
+      grid-template-columns: 1.1rem max-content;
       grid-template-areas: 'icon value';
       align-items: center;
-      gap: 0.15rem 0.85rem;
-    }
-  }
-
-  @media (max-width: 420px) {
-    .contact-list {
-      gap: 0.65rem;
-    }
-
-    .contact-link {
-      padding: 0.92rem 0.85rem;
+      gap: 0.12rem 0.8rem;
     }
   }
 </style>

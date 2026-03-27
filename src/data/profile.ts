@@ -101,8 +101,8 @@ export type About = {
 
 export const siteMeta: SiteMeta = {
   title: {
-    ja: '神林励旺 | 研究者プロフィール',
-    en: 'Reo Kambayashi | Research Profile',
+    ja: 'Reo Kambayashi',
+    en: 'Reo Kambayashi',
   },
   description: {
     ja: '神林励旺の研究テーマ、発表、経歴、連絡先をまとめた研究者プロフィールページ',

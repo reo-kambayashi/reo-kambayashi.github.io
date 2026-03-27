@@ -52,24 +52,24 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       :root {
         --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
         --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-        --page-bg: #eaf1fb;
-        --paper: rgba(255, 255, 255, 0.94);
-        --surface: rgba(247, 250, 255, 0.94);
-        --surface-soft: rgba(255, 255, 255, 0.99);
-        --section-surface: rgba(251, 253, 255, 0.94);
-        --section-surface-alt: rgba(246, 250, 255, 0.92);
-        --text: #1f2328;
-        --text-strong: #14181d;
-        --muted: #5f6f88;
-        --accent: #3d6fb4;
-        --accent-strong: #2755a5;
-        --border: rgba(31, 35, 40, 0.08);
-        --surface-border: rgba(31, 35, 40, 0.06);
-        --max-width: 1120px;
+        --page-bg: #f7f7f4;
+        --paper: #ffffff;
+        --surface: #f2f2ef;
+        --surface-soft: #ffffff;
+        --section-surface: #ffffff;
+        --section-surface-alt: #ffffff;
+        --text: #111111;
+        --text-strong: #000000;
+        --muted: #777777;
+        --accent: #111111;
+        --accent-strong: #000000;
+        --border: #d4d4d0;
+        --surface-border: #d4d4d0;
+        --max-width: 820px;
         --page-gutter: clamp(0.75rem, 2vw, 1.5rem);
-        --section-px: clamp(1.4rem, 4vw, 3.25rem);
-        --section-py: clamp(1.5rem, 3.6vw, 2.6rem);
-        --section-gap: clamp(0.9rem, 2vw, 1.25rem);
+        --section-px: clamp(1.6rem, 4vw, 3.2rem);
+        --section-py: clamp(2rem, 4vw, 3.2rem);
+        --section-gap: clamp(1.4rem, 2.5vw, 2rem);
         --font-size-base: clamp(0.96rem, 0.94rem + 0.16vw, 1.02rem);
         --line-height: 1.9;
       }
@@ -105,8 +105,8 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         max-width: var(--max-width);
         margin: 0 auto;
         background: var(--paper);
-        border-radius: 24px;
-        overflow: hidden;
+        border: 1px solid var(--border);
+        border-top: none;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -119,14 +119,6 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         padding: var(--section-py) var(--section-px);
         position: relative;
         scroll-margin-top: 6rem;
-      }
-
-      main.wrap > section:not(.hero) {
-        background: var(--section-surface);
-      }
-
-      main.wrap > section:nth-child(odd):not(.hero) {
-        background: var(--section-surface-alt);
       }
 
       section + section {
@@ -152,22 +144,21 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       }
 
       h2 {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        font-size: 0.98rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        color: var(--text-strong);
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
-      h2::before {
-        content: '';
-        width: 0.55rem;
-        height: 0.55rem;
-        border-radius: 999px;
-        background: rgba(61, 111, 180, 0.16);
-        border: 1px solid rgba(61, 111, 180, 0.34);
+      h3 {
+        font-family: var(--font-serif);
+        font-size: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+        font-weight: 600;
+        line-height: 1.6;
+        color: var(--text-strong);
+        margin: 0;
       }
 
       p,
@@ -183,18 +174,18 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       }
 
       a {
-        color: var(--accent);
+        color: var(--text);
         text-decoration-thickness: 1px;
         text-underline-offset: 0.18em;
       }
 
       a:hover,
       a:focus-visible {
-        color: var(--accent-strong);
+        color: var(--muted);
       }
 
       a:focus-visible {
-        outline: 2px solid var(--accent);
+        outline: 2px solid var(--text);
         outline-offset: 3px;
       }
 
@@ -231,12 +222,13 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
 
       .section-rule {
         height: 1px;
-        background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.04));
+        background: var(--border);
       }
 
       .surface-card {
-        background: var(--surface-soft);
-        border-radius: 18px;
+        background: transparent;
+        border-radius: 0;
+        border-bottom: 1px solid var(--border);
       }
 
       .js .scroll-fade {
@@ -277,74 +269,80 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
 
       .site-nav-shell {
         position: sticky;
-        top: 0.4rem;
+        top: 0;
         z-index: 10;
         max-width: var(--max-width);
-        margin: 0 auto 0.9rem;
-        padding: 0.9rem var(--page-gutter) 0.6rem;
-        backdrop-filter: blur(8px);
+        margin: 0 auto;
+        padding: 0 var(--page-gutter);
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--border);
+        border-top: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
       }
 
       .language-switcher {
         display: flex;
-        justify-content: flex-end;
-        margin-bottom: 0.45rem;
+        flex-shrink: 0;
+        order: 2;
       }
 
       .language-switcher-inner {
         display: inline-flex;
         align-items: center;
-        gap: 0.45rem;
-        padding: 0.3rem 0.45rem;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.84);
+        gap: 0.25rem;
       }
 
       .language-link {
         display: inline-flex;
         align-items: center;
-        min-height: 1.9rem;
-        padding: 0.2rem 0.55rem;
-        border-radius: 999px;
+        padding: 0.1rem 0.15rem;
         color: var(--muted);
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.75rem;
+        font-weight: 500;
         text-decoration: none;
-        transition: background-color 160ms ease, color 160ms ease;
+        letter-spacing: 0.08em;
+        transition: color 120ms ease;
       }
 
       .language-link:hover,
       .language-link:focus-visible {
-        background: rgba(61, 111, 180, 0.1);
-        color: var(--accent-strong);
+        color: var(--text-strong);
       }
 
       .language-link.is-current {
-        background: rgba(61, 111, 180, 0.16);
-        color: var(--accent-strong);
+        color: var(--text-strong);
+        font-weight: 700;
       }
 
       .language-divider {
-        color: var(--muted);
-        font-size: 0.82rem;
+        color: var(--border);
+        font-size: 0.75rem;
+        user-select: none;
       }
 
       .site-nav {
         display: flex;
-        justify-content: center;
+        order: 1;
+        flex: 1;
+        min-width: 0;
       }
 
       .nav-list {
         display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        padding: 0.45rem;
-        background: rgba(255, 255, 255, 0.84);
-        border-radius: 999px;
-        width: fit-content;
-        max-width: 100%;
-        margin: 0 auto;
+        flex-wrap: nowrap;
+        gap: 0;
+        padding: 0;
+        background: none;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .nav-list::-webkit-scrollbar {
+        display: none;
       }
 
       .nav-item {
@@ -354,35 +352,35 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       .nav-link {
         color: var(--muted);
         text-decoration: none;
-        font-size: 0.94rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 500;
         white-space: nowrap;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        min-height: 2.45rem;
-        padding: 0.35rem 0.95rem;
-        border-radius: 999px;
-        transition: background-color 160ms ease, color 160ms ease;
+        min-height: 2.6rem;
+        padding: 0 0.85rem 0 0;
+        transition: color 120ms ease;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
       }
 
       .nav-link:hover,
       .nav-link:focus-visible {
-        background: rgba(61, 111, 180, 0.1);
-        color: var(--accent-strong);
+        color: var(--text-strong);
       }
 
       .nav-link.is-active {
-        background: rgba(61, 111, 180, 0.16);
-        color: var(--accent-strong);
+        color: var(--text-strong);
+        font-weight: 700;
+        border-bottom-color: var(--text-strong);
       }
 
       @media (max-width: 640px) {
         :root {
-          --page-gutter: 0.45rem;
-          --section-px: 1rem;
-          --section-py: 1.2rem;
-          --section-gap: 0.8rem;
+          --page-gutter: 0.6rem;
+          --section-px: 1.1rem;
+          --section-py: 1.6rem;
+          --section-gap: 1.1rem;
           --font-size-base: 0.95rem;
         }
 
@@ -390,52 +388,18 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
           padding: var(--page-gutter);
         }
 
-        main.wrap {
-          border-radius: 18px;
-        }
-
         .site-nav-shell {
-          top: 0;
-          margin-bottom: 0.6rem;
-          padding: 0.45rem 0 0.35rem;
-        }
-
-        .language-switcher {
-          margin-bottom: 0.35rem;
-          padding: 0 0.1rem;
-        }
-
-        .language-switcher-inner {
-          gap: 0.35rem;
-          padding: 0.28rem 0.38rem;
-        }
-
-        .language-link {
-          min-height: 1.8rem;
-          font-size: 0.82rem;
-        }
-
-        .nav-list {
-          width: 100%;
-          justify-content: flex-start;
-          flex-wrap: nowrap;
-          gap: 0.3rem;
-          padding: 0.35rem;
-          border-radius: 18px;
-          overflow-x: auto;
-          overscroll-behavior-x: contain;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-        }
-
-        .nav-list::-webkit-scrollbar {
-          display: none;
+          padding: 0 var(--page-gutter);
         }
 
         .nav-link {
-          min-height: 2.3rem;
-          padding: 0.35rem 0.85rem;
-          font-size: 0.89rem;
+          min-height: 2.4rem;
+          padding-right: 0.7rem;
+          font-size: 0.8rem;
+        }
+
+        .language-link {
+          font-size: 0.72rem;
         }
 
         .section-header--rule {
