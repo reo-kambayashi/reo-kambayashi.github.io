@@ -306,8 +306,18 @@ export const educationSectionContent = {
 export const educationHistory: Education[] = [
   {
     period: {
-      ja: '2022年4月-現在',
-      en: 'Apr 2022-Present',
+      ja: '2026年4月-現在',
+      en: 'Apr 2026-Present',
+    },
+    description: {
+      ja: '東北大学大学院情報科学研究科 システム情報科学専攻 修士課程',
+      en: "Master's Program, Department of System Information Sciences, Graduate School of Information Sciences, Tohoku University",
+    },
+  },
+  {
+    period: {
+      ja: '2022年4月-2026年3月',
+      en: 'Apr 2022-Mar 2026',
     },
     description: {
       ja: '東北大学 工学部 電気情報物理工学科 学士課程',
