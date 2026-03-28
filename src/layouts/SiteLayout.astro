@@ -52,19 +52,19 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       :root {
         --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
         --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-        --page-bg: #f7f7f4;
+        --page-bg: #f8f9fa;
         --paper: #ffffff;
-        --surface: #f2f2ef;
-        --surface-soft: #ffffff;
+        --surface: #f1f3f5;
+        --surface-soft: #f8f9fa;
         --section-surface: #ffffff;
-        --section-surface-alt: #ffffff;
-        --text: #111111;
-        --text-strong: #000000;
-        --muted: #777777;
-        --accent: #111111;
-        --accent-strong: #000000;
-        --border: #d4d4d0;
-        --surface-border: #d4d4d0;
+        --section-surface-alt: #f8f9fa;
+        --text: #1a1d23;
+        --text-strong: #0d0f13;
+        --muted: #6b7280;
+        --accent: #2563eb;
+        --accent-strong: #1d4ed8;
+        --border: #e2e4e8;
+        --surface-border: #e2e4e8;
         --max-width: 820px;
         --page-gutter: clamp(0.75rem, 2vw, 1.5rem);
         --section-px: clamp(1.6rem, 4vw, 3.2rem);
@@ -174,18 +174,18 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       }
 
       a {
-        color: var(--text);
+        color: var(--accent);
         text-decoration-thickness: 1px;
         text-underline-offset: 0.18em;
       }
 
       a:hover,
       a:focus-visible {
-        color: var(--muted);
+        color: var(--accent-strong);
       }
 
       a:focus-visible {
-        outline: 2px solid var(--text);
+        outline: 2px solid var(--accent);
         outline-offset: 3px;
       }
 
@@ -372,7 +372,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       .nav-link.is-active {
         color: var(--text-strong);
         font-weight: 700;
-        border-bottom-color: var(--text-strong);
+        border-bottom-color: var(--accent);
       }
 
       @media (max-width: 640px) {
