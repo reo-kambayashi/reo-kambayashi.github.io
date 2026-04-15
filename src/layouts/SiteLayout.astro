@@ -52,25 +52,29 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       :root {
         --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
         --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-        --page-bg: #f8f9fa;
-        --paper: #ffffff;
-        --surface: #f1f3f5;
-        --surface-soft: #f8f9fa;
-        --section-surface: #ffffff;
-        --section-surface-alt: #f8f9fa;
-        --text: #1a1d23;
-        --text-strong: #0d0f13;
-        --muted: #6b7280;
-        --accent: #2563eb;
-        --accent-strong: #1d4ed8;
-        --border: #e2e4e8;
-        --surface-border: #e2e4e8;
+        --page-bg: #f5f3ef;
+        --paper: #fdfcfa;
+        --surface: #f0ede8;
+        --surface-soft: #f7f5f1;
+        --section-surface: #fdfcfa;
+        --section-surface-alt: #f7f5f1;
+        --text: #2c2c2c;
+        --text-strong: #1a1a1a;
+        --muted: #7a756d;
+        --accent: #3d5a80;
+        --accent-strong: #2c4a6e;
+        --accent-light: #e8eff5;
+        --border: #e4dfd8;
+        --surface-border: #ddd8d0;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
         --max-width: 820px;
         --page-gutter: clamp(0.75rem, 2vw, 1.5rem);
         --section-px: clamp(1.6rem, 4vw, 3.2rem);
         --section-py: clamp(2rem, 4vw, 3.2rem);
         --section-gap: clamp(1.4rem, 2.5vw, 2rem);
-        --font-size-base: clamp(0.96rem, 0.94rem + 0.16vw, 1.02rem);
+        --font-size-base: clamp(1rem, 0.96rem + 0.16vw, 1.06rem);
         --line-height: 1.9;
       }
 
@@ -90,7 +94,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       }
 
       body {
-        min-height: 100vh;
+        min-height: 100dvh;
         background: var(--page-bg);
         color: var(--text);
         font-family: var(--font-sans);
@@ -105,8 +109,8 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         max-width: var(--max-width);
         margin: 0 auto;
         background: var(--paper);
-        border: 1px solid var(--border);
-        border-top: none;
+        box-shadow: var(--shadow-md);
+        border-radius: 2px;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -123,6 +127,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
 
       section + section {
         border-top: 1px solid var(--border);
+        border-top-color: rgba(228, 223, 216, 0.5);
       }
 
       h1,
@@ -177,11 +182,14 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         color: var(--accent);
         text-decoration-thickness: 1px;
         text-underline-offset: 0.18em;
+        text-decoration-color: transparent;
+        transition: color 150ms ease, text-decoration-color 150ms ease;
       }
 
       a:hover,
       a:focus-visible {
         color: var(--accent-strong);
+        text-decoration-color: currentColor;
       }
 
       a:focus-visible {
@@ -275,9 +283,9 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         margin: 0 auto;
         padding: 0 var(--page-gutter);
         backdrop-filter: blur(12px);
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid var(--border);
-        border-top: none;
+        background: rgba(253, 252, 250, 0.92);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -299,8 +307,9 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       .language-link {
         display: inline-flex;
         align-items: center;
-        padding: 0.1rem 0.15rem;
+        padding: 0.45rem 0.5rem;
         color: var(--muted);
+        font-family: var(--font-sans);
         font-size: 0.75rem;
         font-weight: 500;
         text-decoration: none;
@@ -352,6 +361,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
       .nav-link {
         color: var(--muted);
         text-decoration: none;
+        font-family: var(--font-sans);
         font-size: 0.82rem;
         font-weight: 500;
         white-space: nowrap;
@@ -360,8 +370,20 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         min-height: 2.6rem;
         padding: 0 0.85rem 0 0;
         transition: color 120ms ease;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
+        position: relative;
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0.85rem;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 1px;
+        transform: scaleX(0);
+        transition: transform 200ms ease;
       }
 
       .nav-link:hover,
@@ -369,10 +391,17 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         color: var(--text-strong);
       }
 
+      .nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
       .nav-link.is-active {
         color: var(--text-strong);
         font-weight: 700;
-        border-bottom-color: var(--accent);
+      }
+
+      .nav-link.is-active::after {
+        transform: scaleX(1);
       }
 
       @media (max-width: 640px) {
@@ -393,7 +422,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         }
 
         .nav-link {
-          min-height: 2.4rem;
+          min-height: 2.75rem;
           padding-right: 0.7rem;
           font-size: 0.8rem;
         }
@@ -426,6 +455,17 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
         }
       }
 
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0.015;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 256px 256px;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         html {
           scroll-behavior: auto;
@@ -437,6 +477,11 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
           transform: none;
           transition: none;
           will-change: auto;
+        }
+
+        a,
+        .nav-link::after {
+          transition: none !important;
         }
       }
     </style>
