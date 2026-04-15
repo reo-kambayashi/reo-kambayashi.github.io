@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import yansCertificate from '../../assets/YANS_certificate.jpg';
+import ipsjCertificate from '../../assets/IPSJ_certificate.jpg';
 import {
   awardSectionContent,
   resolveLocalizedText,
@@ -16,6 +17,7 @@ type Props = {
 const { locale, awards } = Astro.props as Props;
 const certificateImages = {
   yans: yansCertificate,
+  ipsj: ipsjCertificate,
 };
 const heading = resolveLocalizedText(awardSectionContent.heading, locale);
 const targetLabel = resolveLocalizedText(awardSectionContent.targetLabel, locale);
@@ -91,7 +93,7 @@ const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCe
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 1.25rem;
     align-items: start;
-    padding: 1.4rem 0;
+    padding: 1.4rem 0 1.4rem 1.5rem;
     border-bottom: 1px solid var(--border);
   }
 
@@ -107,6 +109,18 @@ const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCe
 
   .award-title {
     margin: 0;
+    position: relative;
+  }
+
+  .award-title::before {
+    content: '';
+    position: absolute;
+    left: -1.15rem;
+    top: 0.75em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
   }
 
   .award-detail {
@@ -122,9 +136,10 @@ const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCe
   }
 
   .award-detail--result {
-    color: var(--text);
+    color: var(--accent);
+    font-family: var(--font-sans);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .award-certificate {
@@ -137,6 +152,12 @@ const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCe
     height: auto;
     border-radius: 4px;
     border: 1px solid var(--border);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .award-certificate-image:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-lg);
   }
 
   .award-empty {
@@ -147,7 +168,7 @@ const defaultCertificateAlt = resolveLocalizedText(awardSectionContent.defaultCe
     .award-item {
       grid-template-columns: 1fr;
       gap: 0.8rem;
-      padding: 1.2rem 0;
+      padding: 1.2rem 0 1.2rem 1.5rem;
     }
 
     .award-detail {
