@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import HeroSection from './sections/HeroSection.astro';
+import AboutSection from './sections/AboutSection.astro';
+import PublicationsSection from './sections/PublicationsSection.astro';
+import AwardsSection from './sections/AwardsSection.astro';
+import EducationSection from './sections/EducationSection.astro';
+import ContactSection from './sections/ContactSection.astro';
+import {
+  siteMeta,
+  profileSummary,
+  about,
+  publications,
+  awards,
+  educationHistory,
+  contacts,
+  contactIcons,
+  resolveLocalizedText,
+} from '../data/profile';
+import type { Locale } from '../data/types';
+
+type Props = {
+  locale: Locale;
+};
+
+const { locale } = Astro.props as Props;
+const title = resolveLocalizedText(siteMeta.title, locale);
+const description = resolveLocalizedText(siteMeta.description, locale);
+---
+<SiteLayout locale={locale} title={title} description={description}>
+  <HeroSection locale={locale} profileSummary={profileSummary} />
+  <AboutSection locale={locale} about={about} />
+  <PublicationsSection
+    locale={locale}
+    publications={publications}
+    selfName={profileSummary.selfName}
+  />
+  <AwardsSection locale={locale} awards={awards} />
+  <EducationSection locale={locale} educationHistory={educationHistory} />
+  <ContactSection locale={locale} contacts={contacts} contactIcons={contactIcons} />
+</SiteLayout>
