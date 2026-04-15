@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.18.0",
+    "astro": "^6.1.6",
     "base-64": "^1.0.0"
   }
 }
