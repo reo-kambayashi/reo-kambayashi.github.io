@@ -1,47 +1,22 @@
-export type Locale = 'ja' | 'en';
+export type {
+  About,
+  Award,
+  Contact,
+  ContactIcon,
+  ContactIconKey,
+  Education,
+  LocalizedText,
+  Locale,
+  ProfileSummary,
+  Publication,
+  SectionLink,
+  SiteMeta,
+} from './types';
 
-export type LocalizedText = {
-  ja: string;
-  en?: string;
-};
+import type { LocalizedText, Locale, ContactIcon, ContactIconKey, SiteMeta, SectionLink, ProfileSummary, About, Publication, Award, Education, Contact } from './types';
 
 export const resolveLocalizedText = (text: LocalizedText, locale: Locale) =>
   locale === 'en' ? text.en ?? text.ja : text.ja;
-
-export type PublicationLink = {
-  label: LocalizedText;
-  href: string;
-};
-
-export type Publication = {
-  title: LocalizedText;
-  authors: string[];
-  venue: LocalizedText;
-  type?: LocalizedText;
-  note?: LocalizedText;
-  links?: PublicationLink[];
-};
-
-export type Award = {
-  title: LocalizedText;
-  targetTitle?: LocalizedText;
-  result?: LocalizedText;
-  certificateImage?: 'yans';
-  certificateAlt?: LocalizedText;
-};
-
-export type Education = {
-  period: LocalizedText;
-  description: LocalizedText;
-};
-
-export type ContactIcon = {
-  type: 'stroke' | 'fill';
-  d: string;
-  strokeWidth?: number;
-};
-
-export type ContactIconKey = 'mail' | 'x';
 
 export const contactIcons: Record<ContactIconKey, ContactIcon> = {
   mail: {
@@ -53,50 +28,6 @@ export const contactIcons: Record<ContactIconKey, ContactIcon> = {
     type: 'fill',
     d: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
   },
-};
-
-export type Contact = {
-  label: LocalizedText;
-  value: string;
-  displayValue?: string;
-  href: string;
-  newTab: boolean;
-  icon?: ContactIconKey;
-  showLabel?: boolean;
-};
-
-export type SectionLink = {
-  href: `#${string}`;
-  label: LocalizedText;
-};
-
-export type SiteMeta = {
-  title: LocalizedText;
-  description: LocalizedText;
-};
-
-export type ProfileSummary = {
-  name: LocalizedText;
-  selfName: string;
-  heroKicker: LocalizedText;
-  heroMarkLabel: LocalizedText;
-  heroLogoAlt: LocalizedText;
-  affiliationLabel: LocalizedText;
-  affiliationValue: LocalizedText;
-  researchAreaLabel: LocalizedText;
-  researchAreaValue: LocalizedText;
-  basicInfoLabel: LocalizedText;
-};
-
-export type About = {
-  heading: LocalizedText;
-  description: LocalizedText;
-  membershipPrefix: LocalizedText;
-  membershipSuffix: LocalizedText;
-  group: {
-    name: string;
-    href: string;
-  };
 };
 
 export const siteMeta: SiteMeta = {
@@ -160,8 +91,8 @@ export const profileSummary: ProfileSummary = {
     en: 'Affiliation',
   },
   affiliationValue: {
-    ja: '東北大学工学部電気情報物理工学科 学部4年',
-    en: 'Fourth-year undergraduate student, Department of Electrical, Information and Physics Engineering, School of Engineering, Tohoku University',
+    ja: '東北大学大学院情報科学研究科 修士課程1年',
+    en: 'First-year master\'s student, Department of System Information Sciences, Graduate School of Information Sciences, Tohoku University',
   },
   researchAreaLabel: {
     ja: '研究分野',
@@ -183,8 +114,8 @@ export const about: About = {
     en: 'Profile',
   },
   description: {
-    ja: '東北大学工学部電気情報物理工学科の学部4年です。',
-    en: 'I am a fourth-year undergraduate student in the Department of Electrical, Information and Physics Engineering, School of Engineering, Tohoku University.',
+    ja: '東北大学大学院情報科学研究科の修士課程1年です。',
+    en: 'I am a first-year master\'s student in the Department of System Information Sciences, Graduate School of Information Sciences, Tohoku University.',
   },
   membershipPrefix: {
     ja: '',
@@ -278,6 +209,17 @@ export const awardSectionContent = {
 };
 
 export const awards: Award[] = [
+  {
+    title: {
+      ja: '情報処理学会東北支部 令和7年度学生奨励賞',
+      en: 'Student Encouragement Award from the Tohoku Branch of Information Processing Society of Japan',
+    },
+    certificateImage: 'ipsj',
+    certificateAlt: {
+      ja: '情報処理学会東北支部学生奨励賞の賞状',
+      en: 'Student Encouragement Award certificate from the Tohoku Branch of Information Processing Society of Japan',
+    },
+  },
   {
     title: {
       ja: '第20回言語処理若手シンポジウム（YANS 2025）奨励賞',
