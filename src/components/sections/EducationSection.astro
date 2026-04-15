@@ -60,7 +60,13 @@ const heading = resolveLocalizedText(educationSectionContent.heading, locale);
     bottom: 0.5rem;
     left: calc(var(--timeline-axis) + (var(--timeline-marker-size) / 2) - 0.5px);
     width: 1px;
-    background: var(--border);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--border) 15%,
+      var(--border) 85%,
+      transparent 100%
+    );
   }
 
   .timeline-item {
@@ -89,9 +95,21 @@ const heading = resolveLocalizedText(educationSectionContent.heading, locale);
     width: var(--timeline-marker-size);
     height: var(--timeline-marker-size);
     border-radius: 999px;
-    background: var(--accent);
+    background: var(--paper);
+    border: 2px solid var(--accent);
     position: relative;
     outline: 3px solid var(--paper);
+  }
+
+  .timeline-item:last-child .timeline-dot {
+    background: var(--accent);
+    border: none;
+    outline: 3px solid var(--paper);
+  }
+
+  .timeline-item:last-child .timeline-period {
+    color: var(--accent);
+    font-weight: 600;
   }
 
   .timeline-body {
@@ -102,6 +120,7 @@ const heading = resolveLocalizedText(educationSectionContent.heading, locale);
 
   .timeline-period {
     color: var(--muted);
+    font-family: var(--font-sans);
     font-size: 0.82rem;
     font-weight: 500;
     letter-spacing: 0.04em;
