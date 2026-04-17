@@ -1,4 +1,6 @@
 ---
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { StudyArticle } from '../../data/types';
 import {
   formatPublishedDate,
@@ -14,6 +16,18 @@ const { article } = Astro.props as Props;
 const basePath = import.meta.env.BASE_URL;
 const pdfHref = resolveAssetPath(basePath, article.pdfPath);
 const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
+
+const svgDirPath = article.pdfPath.replace(/\.pdf$/, '-svg');
+const svgAbsDir = join(process.cwd(), 'public', svgDirPath);
+let svgPages: string[] = [];
+try {
+  svgPages = readdirSync(svgAbsDir)
+    .filter((f) => f.endsWith('.svg'))
+    .sort()
+    .map((f) => resolveAssetPath(basePath, `${svgDirPath}/${f}`));
+} catch {
+  svgPages = [];
+}
 ---
 <section aria-labelledby="study-article-heading">
   <header class="article-header">
@@ -35,16 +49,22 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
     {article.description && <p class="description">{article.description}</p>}
   </header>
 
-  <div class="pdf-pages" data-pdf={pdfHref} data-state="loading" aria-label={article.title}>
-    <p class="pdf-status" data-status-loading>読み込み中…</p>
-    <p class="pdf-status" data-status-error hidden>
-      PDF を読み込めませんでした。<a href={pdfHref} target="_blank" rel="noopener">直接開く</a>。
-    </p>
-    <noscript>
+  <div class="pdf-pages" aria-label={article.title}>
+    {svgPages.length > 0 ? (
+      svgPages.map((src, i) => (
+        <img
+          class="pdf-page"
+          src={src}
+          alt={`${article.title} - page ${i + 1}`}
+          loading={i < 2 ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      ))
+    ) : (
       <p class="pdf-status">
-        JavaScript が無効です。<a href={pdfHref} target="_blank" rel="noopener">PDF を別タブで開く</a>。
+        スライドを表示できません。<a href={pdfHref} target="_blank" rel="noopener">PDF を開く</a>。
       </p>
-    </noscript>
+    )}
   </div>
 
   <div class="article-actions">
@@ -59,65 +79,6 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
     </a>
   </div>
 </section>
-
-<script>
-  import * as pdfjsLib from 'pdfjs-dist';
-  import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-
-  pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-
-  const renderPdf = async (container: HTMLElement) => {
-    const src = container.dataset.pdf;
-    if (!src) return;
-
-    const loadingEl = container.querySelector<HTMLElement>('[data-status-loading]');
-    const errorEl = container.querySelector<HTMLElement>('[data-status-error]');
-
-    try {
-      const pdf = await pdfjsLib.getDocument(src).promise;
-      const containerWidth = container.clientWidth;
-
-      const ua = navigator.userAgent;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-      const isFirefox = /firefox/i.test(ua);
-      const MAX_CANVAS_DIM = isSafari ? 4096 : isFirefox ? 11180 : 16384;
-      const MAX_CANVAS_AREA = isSafari ? 16777216 : isFirefox ? 124919423 : 268435456;
-
-      loadingEl?.remove();
-      container.dataset.state = 'loaded';
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const baseViewport = page.getViewport({ scale: 1 });
-        const dimScale = MAX_CANVAS_DIM / Math.max(baseViewport.width, baseViewport.height);
-        const areaScale = Math.sqrt(MAX_CANVAS_AREA / (baseViewport.width * baseViewport.height));
-        const cssScale = containerWidth / baseViewport.width;
-        const renderScale = Math.max(cssScale, Math.min(dimScale, areaScale));
-        const viewport = page.getViewport({ scale: renderScale });
-
-        const canvas = document.createElement('canvas');
-        canvas.className = 'pdf-page';
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        canvas.style.aspectRatio = `${baseViewport.width} / ${baseViewport.height}`;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) continue;
-
-        container.appendChild(canvas);
-        await page.render({ canvasContext: ctx, viewport, canvas }).promise;
-      }
-    } catch (err) {
-      console.error('PDF render failed', err);
-      container.dataset.state = 'error';
-      loadingEl?.setAttribute('hidden', '');
-      errorEl?.removeAttribute('hidden');
-    }
-  };
-
-  document.querySelectorAll<HTMLElement>('[data-pdf]').forEach((el) => {
-    void renderPdf(el);
-  });
-</script>
 
 <style>
   .article-header {
@@ -171,7 +132,7 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
     width: 100%;
   }
 
-  .pdf-pages :global(.pdf-page) {
+  .pdf-pages .pdf-page {
     width: 100%;
     height: auto;
     display: block;
