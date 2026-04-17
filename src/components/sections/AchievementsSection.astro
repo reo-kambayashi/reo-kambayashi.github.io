@@ -1,0 +1,194 @@
+---
+import { Image } from 'astro:assets';
+import aieLogo from '../../assets/AIE_logo.png';
+import {
+  achievementSectionContent,
+  resolveLocalizedText,
+  type Achievement,
+  type Locale,
+} from '../../data/profile';
+
+type Props = {
+  locale: Locale;
+  achievements: Achievement[];
+};
+
+const { locale, achievements } = Astro.props as Props;
+const logoImages = {
+  aie: aieLogo,
+};
+const heading = resolveLocalizedText(achievementSectionContent.heading, locale);
+const emptyMessage = resolveLocalizedText(achievementSectionContent.empty, locale);
+---
+<section
+  id="achievements"
+  class="scroll-fade"
+  aria-labelledby="achievements-heading"
+  data-animate="fade-up"
+  data-animate-stagger="90"
+  data-animate-translate-y="14px"
+  data-animate-duration="420ms"
+>
+  <div class="section-header section-header--rule">
+    <h2 id="achievements-heading">{heading}</h2>
+    <div class="section-rule" aria-hidden="true"></div>
+  </div>
+  <div class="achievement-list">
+    {achievements.length > 0 ? (
+      achievements.map((achievement) => {
+        const logo = achievement.logoImage ? logoImages[achievement.logoImage] : undefined;
+        const logoAltText = achievement.logoAlt
+          ? resolveLocalizedText(achievement.logoAlt, locale)
+          : '';
+        return (
+          <article class="achievement-item" data-animate-item>
+            <div class="achievement-body">
+              <h3 class="achievement-title">
+                {achievement.href ? (
+                  <a href={achievement.href} target="_blank" rel="noopener noreferrer" class="achievement-link">
+                    {resolveLocalizedText(achievement.title, locale)}
+                  </a>
+                ) : (
+                  resolveLocalizedText(achievement.title, locale)
+                )}
+              </h3>
+              {achievement.period && (
+                <p class="achievement-detail">
+                  {resolveLocalizedText(achievement.period, locale)}
+                </p>
+              )}
+              {achievement.detail && (
+                <p class="achievement-detail achievement-detail--accent">
+                  {resolveLocalizedText(achievement.detail, locale)}
+                </p>
+              )}
+            </div>
+            {logo && (
+              <div class="achievement-logo">
+                <Image
+                  src={logo}
+                  alt={logoAltText}
+                  width={176}
+                  densities={[1.5, 2, 3]}
+                  class="achievement-logo-image"
+                />
+              </div>
+            )}
+          </article>
+        );
+      })
+    ) : (
+      <p class="achievement-empty">{emptyMessage}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .achievement-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .achievement-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.4rem 0 1.4rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .achievement-logo {
+    width: clamp(7rem, 8vw + 4rem, 11rem);
+    flex-shrink: 0;
+  }
+
+  .achievement-logo-image {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 640px) {
+    .achievement-item {
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+    }
+
+    .achievement-logo {
+      width: 6.5rem;
+      justify-self: start;
+    }
+  }
+
+  .achievement-item:first-child {
+    padding-top: 0.2rem;
+  }
+
+  .achievement-body {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .achievement-title {
+    margin: 0;
+    position: relative;
+  }
+
+  .achievement-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .achievement-link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .achievement-title::before {
+    content: '';
+    position: absolute;
+    left: -1.15rem;
+    top: 0.75em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .achievement-detail {
+    margin: 0;
+    font-size: clamp(0.92rem, 0.88rem + 0.14vw, 1.02rem);
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .achievement-detail--accent {
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(0.84rem, 0.8rem + 0.12vw, 0.94rem);
+  }
+
+  .achievement-empty {
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .achievement-item {
+      padding: 1.2rem 0 1.2rem 1.5rem;
+    }
+
+    .achievement-detail {
+      font-size: 0.91rem;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .achievement-detail {
+      max-width: var(--reading-max, 42rem);
+    }
+  }
+</style>
