@@ -6,6 +6,7 @@ import {
   type Locale,
 } from '../data/profile';
 import ScrollFadeScript from '../components/scripts/ScrollFadeScript.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 type Props = {
   locale: Locale;
@@ -532,6 +533,7 @@ const englishPath = `${basePath.replace(/\/$/, '')}/en`;
     <main class="wrap">
       <slot />
     </main>
+    <SiteFooter />
     <slot name="scripts" />
     <ScrollFadeScript />
     <script is:inline>
