@@ -1,5 +1,6 @@
 export type {
   About,
+  Achievement,
   Award,
   Contact,
   ContactIcon,
@@ -13,7 +14,7 @@ export type {
   SiteMeta,
 } from './types';
 
-import type { LocalizedText, Locale, ContactIcon, ContactIconKey, SiteMeta, SectionLink, ProfileSummary, About, Publication, Award, Education, Contact } from './types';
+import type { LocalizedText, Locale, ContactIcon, ContactIconKey, SiteMeta, SectionLink, ProfileSummary, About, Publication, Award, Achievement, Education, Contact } from './types';
 
 export const resolveLocalizedText = (text: LocalizedText, locale: Locale) =>
   locale === 'en' ? text.en ?? text.ja : text.ja;
@@ -64,6 +65,7 @@ export const sectionLinks: SectionLink[] = [
   { href: '#about', label: { ja: 'プロフィール', en: 'Profile' } },
   { href: '#research', label: { ja: '研究発表', en: 'Presentations' } },
   { href: '#awards', label: { ja: '受賞', en: 'Awards' } },
+  { href: '#achievements', label: { ja: '実績', en: 'Achievements' } },
   { href: '#education', label: { ja: '経歴', en: 'Education' } },
   { href: '#contact', label: { ja: '連絡先', en: 'Contact' } },
 ];
@@ -234,6 +236,36 @@ export const awards: Award[] = [
     certificateImage: 'yans',
     certificateAlt: {
       ja: 'YANS 2025 奨励賞の賞状',
+    },
+  },
+];
+
+export const achievementSectionContent = {
+  heading: {
+    ja: '実績',
+    en: 'Achievements',
+  },
+  empty: {
+    ja: '実績情報は現在準備中です。',
+    en: 'Achievement information is currently being prepared.',
+  },
+};
+
+export const achievements: Achievement[] = [
+  {
+    title: {
+      ja: '東北大学 人工知能エレクトロニクス卓越大学院プログラム（AIE） 採択',
+      en: 'Admitted to Tohoku University WISE Program for AI Electronics (AIE)',
+    },
+    detail: {
+      ja: '2026年度 M1採択者9名',
+      en: '9 M1 students admitted in AY2026',
+    },
+    href: 'https://www.aie.tohoku.ac.jp/',
+    logoImage: 'aie',
+    logoAlt: {
+      ja: 'AIE プログラムロゴ',
+      en: 'AIE Program logo',
     },
   },
 ];
