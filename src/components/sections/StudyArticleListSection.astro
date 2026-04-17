@@ -57,7 +57,8 @@ const buildArticlePath = (slug: string) => `${basePath}/study/competitive-progra
 
   .lead {
     color: var(--muted);
-    max-width: 44em;
+    max-width: var(--reading-max, 44em);
+    font-size: clamp(0.98rem, 0.94rem + 0.16vw, 1.1rem);
     word-break: auto-phrase;
     line-break: strict;
   }
@@ -85,7 +86,7 @@ const buildArticlePath = (slug: string) => `${basePath}/study/competitive-progra
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 1.15rem 0;
+    padding: clamp(1rem, 1.4vw, 1.4rem) 0;
     color: inherit;
     text-decoration: none;
   }
@@ -105,8 +106,9 @@ const buildArticlePath = (slug: string) => `${basePath}/study/competitive-progra
     align-items: center;
     gap: 0.4rem 0.85rem;
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: clamp(0.8rem, 0.76rem + 0.12vw, 0.9rem);
   }
+
 
   .article-tags {
     display: flex;
@@ -125,5 +127,7 @@ const buildArticlePath = (slug: string) => `${basePath}/study/competitive-progra
 
   .article-description {
     color: var(--text);
+    max-width: var(--reading-max, 44em);
+    font-size: clamp(0.96rem, 0.92rem + 0.16vw, 1.08rem);
   }
 </style>
