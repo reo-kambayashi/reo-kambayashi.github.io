@@ -53,8 +53,8 @@ if (pdfs.length === 0) {
 try {
   execFileSync('mutool', ['-v'], { stdio: 'ignore' });
 } catch {
-  console.error('[pdf-to-svg] mutool not found. Install with `brew install mupdf-tools`.');
-  process.exit(1);
+  console.warn('[pdf-to-svg] mutool not found — skipping regeneration (using committed SVGs). Install with `brew install mupdf-tools` to regenerate locally.');
+  process.exit(0);
 }
 
 for (const pdf of pdfs) convert(pdf);
