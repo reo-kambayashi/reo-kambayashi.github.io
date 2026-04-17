@@ -116,13 +116,13 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
   }
 
   .contact-icon svg {
-    width: 0.95rem;
-    height: 0.95rem;
+    width: clamp(0.95rem, 0.9rem + 0.18vw, 1.12rem);
+    height: clamp(0.95rem, 0.9rem + 0.18vw, 1.12rem);
   }
 
   .contact-label {
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: clamp(0.84rem, 0.8rem + 0.14vw, 0.94rem);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-decoration: none;
@@ -133,7 +133,7 @@ const heading = resolveLocalizedText(contactSectionContent.heading, locale);
     overflow-wrap: anywhere;
     color: var(--text);
     font-family: var(--font-sans);
-    font-size: 0.97rem;
+    font-size: clamp(0.94rem, 0.9rem + 0.18vw, 1.08rem);
     font-weight: 500;
     text-decoration: none;
   }
