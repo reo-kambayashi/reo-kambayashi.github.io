@@ -4,6 +4,7 @@ import HeroSection from './sections/HeroSection.astro';
 import AboutSection from './sections/AboutSection.astro';
 import PublicationsSection from './sections/PublicationsSection.astro';
 import AwardsSection from './sections/AwardsSection.astro';
+import AchievementsSection from './sections/AchievementsSection.astro';
 import EducationSection from './sections/EducationSection.astro';
 import ContactSection from './sections/ContactSection.astro';
 import {
@@ -12,6 +13,7 @@ import {
   about,
   publications,
   awards,
+  achievements,
   educationHistory,
   contacts,
   contactIcons,
@@ -36,6 +38,7 @@ const description = resolveLocalizedText(siteMeta.description, locale);
     selfName={profileSummary.selfName}
   />
   <AwardsSection locale={locale} awards={awards} />
+  <AchievementsSection locale={locale} achievements={achievements} />
   <EducationSection locale={locale} educationHistory={educationHistory} />
   <ContactSection locale={locale} contacts={contacts} contactIcons={contactIcons} />
 </SiteLayout>
