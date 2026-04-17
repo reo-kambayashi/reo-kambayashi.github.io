@@ -27,6 +27,15 @@ export type Award = {
   certificateAlt?: LocalizedText;
 };
 
+export type Achievement = {
+  title: LocalizedText;
+  detail?: LocalizedText;
+  period?: LocalizedText;
+  href?: string;
+  logoImage?: 'aie';
+  logoAlt?: LocalizedText;
+};
+
 export type Education = {
   period: LocalizedText;
   description: LocalizedText;
