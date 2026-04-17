@@ -1,0 +1,30 @@
+---
+const basePath = import.meta.env.BASE_URL;
+const studyPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
+---
+<footer class="site-footer">
+  <a class="footer-link" href={studyPath}>競技プログラミング勉強ノート →</a>
+</footer>
+
+<style>
+  .site-footer {
+    max-width: var(--max-width);
+    margin: 1rem auto 0;
+    padding: 1rem var(--page-gutter) 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .footer-link {
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 150ms ease;
+  }
+
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    color: var(--text-strong);
+  }
+</style>
