@@ -1,0 +1,8 @@
+---
+import StudyLayout from '../../../layouts/StudyLayout.astro';
+import StudyArticleListSection from '../../../components/sections/StudyArticleListSection.astro';
+import { studyArticles, studyPageContent } from '../../../data/studyArticles';
+---
+<StudyLayout title={studyPageContent.siteTitle} description={studyPageContent.siteDescription}>
+  <StudyArticleListSection articles={studyArticles} />
+</StudyLayout>
