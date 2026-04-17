@@ -6,7 +6,7 @@ export const studyArticles: StudyArticle[] = [
     title: 'セグメント木とBITを理解する',
     publishedAt: '2026-04-17',
     description:
-      '区間クエリの基本データ構造であるセグメント木とBITを、AIと対話しながら理解した記録。',
+      '区間クエリの基本データ構造であるセグメント木とBITを理解',
     tags: ['データ構造', 'セグメント木', 'BIT', '区間クエリ'],
     pdfPath: '/study/competitive-programming/pdfs/segtree-bit-slides.pdf',
   },
