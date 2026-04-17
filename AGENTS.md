@@ -1,11 +1,15 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- This Astro site renders a single page from `src/pages/index.astro`.
+- This Astro site renders the profile pages from `src/pages/index.astro` (ja) and `src/pages/en/index.astro` (en).
 - Content lives in `src/data/profile.ts`; update profile text, publications, education history, and contact links there before changing component markup.
 - Section components live in `src/components/sections/`:
   `HeroSection`, `AboutSection`, `PublicationsSection`, `EducationSection`, and `ContactSection`.
 - Global layout, navigation, and shared visual tokens live in `src/layouts/SiteLayout.astro`.
+- The competitive-programming study archive lives under `src/pages/study/competitive-programming/`:
+  `index.astro` is the list page, `[slug].astro` renders each article via `getStaticPaths`.
+  Article metadata is defined in `src/data/studyArticles.ts`; PDF files go in `public/study/competitive-programming/pdfs/`.
+  The study pages share visual tokens but use the separate `src/layouts/StudyLayout.astro`.
 - Place images and SVGs in `src/assets/`. Do not edit generated files in `dist/`.
 
 ## Build, Test, and Development Commands
