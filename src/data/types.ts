@@ -83,3 +83,12 @@ export type About = {
     href: string;
   };
 };
+
+export type StudyArticle = {
+  slug: string;
+  title: string;
+  publishedAt: string;
+  description: string;
+  tags: string[];
+  pdfPath: string;
+};
