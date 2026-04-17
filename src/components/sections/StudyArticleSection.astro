@@ -1,0 +1,172 @@
+---
+import type { StudyArticle } from '../../data/types';
+import {
+  formatPublishedDate,
+  resolveAssetPath,
+  studyPageContent,
+} from '../../data/studyArticles';
+
+type Props = {
+  article: StudyArticle;
+};
+
+const { article } = Astro.props as Props;
+const basePath = import.meta.env.BASE_URL;
+const pdfHref = resolveAssetPath(basePath, article.pdfPath);
+const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
+---
+<section aria-labelledby="study-article-heading">
+  <header class="article-header">
+    <h2 id="study-article-eyebrow">Article</h2>
+    <h1 id="study-article-heading">{article.title}</h1>
+    <div class="article-meta">
+      <span class="meta-label">{studyPageContent.publishedLabel}</span>
+      <time datetime={article.publishedAt}>
+        {formatPublishedDate(article.publishedAt)}
+      </time>
+      {article.tags.length > 0 && (
+        <ul class="article-tags" aria-label={studyPageContent.tagsLabel}>
+          {article.tags.map((tag) => (
+            <li class="article-tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+    {article.description && <p class="description">{article.description}</p>}
+  </header>
+
+  <div class="pdf-frame" role="group" aria-label={article.title}>
+    <iframe
+      src={pdfHref}
+      title={article.title}
+      loading="lazy"
+    ></iframe>
+  </div>
+
+  <div class="article-actions">
+    <a class="action-link primary" href={pdfHref} download>
+      {studyPageContent.downloadLabel}
+    </a>
+    <a class="action-link" href={pdfHref} target="_blank" rel="noopener">
+      {studyPageContent.openInNewTab}
+    </a>
+    <a class="action-link subtle" href={listPath}>
+      ← {studyPageContent.backToList}
+    </a>
+  </div>
+</section>
+
+<style>
+  .article-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.85rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .meta-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .article-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+  }
+
+  .description {
+    color: var(--text);
+    max-width: 60ch;
+  }
+
+  .pdf-frame {
+    width: 100%;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pdf-frame iframe {
+    width: 100%;
+    height: 80vh;
+    min-height: 480px;
+    border: 0;
+    display: block;
+  }
+
+  .article-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+  }
+
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+  }
+
+  .action-link:hover,
+  .action-link:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+
+  .action-link.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fdfcfa;
+  }
+
+  .action-link.primary:hover,
+  .action-link.primary:focus-visible {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: #fdfcfa;
+  }
+
+  .action-link.subtle {
+    border-color: transparent;
+    color: var(--muted);
+  }
+
+  .action-link.subtle:hover,
+  .action-link.subtle:focus-visible {
+    color: var(--text-strong);
+    border-color: transparent;
+  }
+
+  @media (max-width: 640px) {
+    .pdf-frame iframe {
+      height: 70vh;
+      min-height: 420px;
+    }
+  }
+</style>
