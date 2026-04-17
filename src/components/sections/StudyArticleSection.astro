@@ -35,12 +35,16 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
     {article.description && <p class="description">{article.description}</p>}
   </header>
 
-  <div class="pdf-frame" role="group" aria-label={article.title}>
-    <iframe
-      src={pdfHref}
-      title={article.title}
-      loading="lazy"
-    ></iframe>
+  <div class="pdf-pages" data-pdf={pdfHref} data-state="loading" aria-label={article.title}>
+    <p class="pdf-status" data-status-loading>読み込み中…</p>
+    <p class="pdf-status" data-status-error hidden>
+      PDF を読み込めませんでした。<a href={pdfHref} target="_blank" rel="noopener">直接開く</a>。
+    </p>
+    <noscript>
+      <p class="pdf-status">
+        JavaScript が無効です。<a href={pdfHref} target="_blank" rel="noopener">PDF を別タブで開く</a>。
+      </p>
+    </noscript>
   </div>
 
   <div class="article-actions">
@@ -56,6 +60,57 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
   </div>
 </section>
 
+<script>
+  import * as pdfjsLib from 'pdfjs-dist';
+  import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+
+  const renderPdf = async (container: HTMLElement) => {
+    const src = container.dataset.pdf;
+    if (!src) return;
+
+    const loadingEl = container.querySelector<HTMLElement>('[data-status-loading]');
+    const errorEl = container.querySelector<HTMLElement>('[data-status-error]');
+
+    try {
+      const pdf = await pdfjsLib.getDocument(src).promise;
+      const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2.5);
+      const containerWidth = container.clientWidth;
+
+      loadingEl?.remove();
+      container.dataset.state = 'loaded';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const baseViewport = page.getViewport({ scale: 1 });
+        const cssScale = containerWidth / baseViewport.width;
+        const viewport = page.getViewport({ scale: cssScale * dpr });
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page';
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        canvas.style.aspectRatio = `${baseViewport.width} / ${baseViewport.height}`;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) continue;
+
+        container.appendChild(canvas);
+        await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+      }
+    } catch (err) {
+      console.error('PDF render failed', err);
+      container.dataset.state = 'error';
+      loadingEl?.setAttribute('hidden', '');
+      errorEl?.removeAttribute('hidden');
+    }
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-pdf]').forEach((el) => {
+    void renderPdf(el);
+  });
+</script>
+
 <style>
   .article-header {
     display: flex;
@@ -69,7 +124,7 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
     align-items: center;
     gap: 0.4rem 0.85rem;
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: clamp(0.84rem, 0.8rem + 0.12vw, 0.94rem);
   }
 
   .meta-label {
@@ -95,25 +150,31 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
 
   .description {
     color: var(--text);
-    max-width: 44em;
+    max-width: var(--reading-max, 44em);
+    font-size: clamp(0.98rem, 0.94rem + 0.18vw, 1.12rem);
     word-break: auto-phrase;
     line-break: strict;
   }
 
-  .pdf-frame {
+  .pdf-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     width: 100%;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    overflow: hidden;
   }
 
-  .pdf-frame iframe {
+  .pdf-pages :global(.pdf-page) {
     width: 100%;
-    height: 80vh;
-    min-height: 480px;
-    border: 0;
+    height: auto;
     display: block;
+    background: var(--surface-soft);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .pdf-status {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding: 1rem 0;
   }
 
   .article-actions {
@@ -126,11 +187,11 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
   .action-link {
     display: inline-flex;
     align-items: center;
-    padding: 0.45rem 0.9rem;
+    padding: clamp(0.45rem, 0.4vw + 0.35rem, 0.6rem) clamp(0.9rem, 0.6vw + 0.7rem, 1.2rem);
     border: 1px solid var(--border);
     border-radius: 2px;
     color: var(--text);
-    font-size: 0.88rem;
+    font-size: clamp(0.86rem, 0.82rem + 0.14vw, 0.98rem);
     text-decoration: none;
     transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
   }
@@ -144,14 +205,14 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
   .action-link.primary {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fdfcfa;
+    color: #ffffff;
   }
 
   .action-link.primary:hover,
   .action-link.primary:focus-visible {
     background: var(--accent-strong);
     border-color: var(--accent-strong);
-    color: #fdfcfa;
+    color: #ffffff;
   }
 
   .action-link.subtle {
@@ -163,12 +224,5 @@ const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
   .action-link.subtle:focus-visible {
     color: var(--text-strong);
     border-color: transparent;
-  }
-
-  @media (max-width: 640px) {
-    .pdf-frame iframe {
-      height: 70vh;
-      min-height: 420px;
-    }
   }
 </style>
