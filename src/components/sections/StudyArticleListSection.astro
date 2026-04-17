@@ -57,7 +57,9 @@ const buildArticlePath = (slug: string) => `${basePath}/study/competitive-progra
 
   .lead {
     color: var(--muted);
-    max-width: 60ch;
+    max-width: 44em;
+    word-break: auto-phrase;
+    line-break: strict;
   }
 
   .empty {
