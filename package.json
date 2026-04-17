@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "pdf:svg": "node scripts/pdf-to-svg.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/pdf-to-svg.mjs",
     "build": "astro build",
     "preview": "astro preview"
   },
   "dependencies": {
     "astro": "^6.1.6",
-    "base-64": "^1.0.0",
-    "pdfjs-dist": "^5.6.205"
+    "base-64": "^1.0.0"
   }
 }
