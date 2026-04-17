@@ -1,6 +1,16 @@
 import type { StudyArticle } from './types';
 
-export const studyArticles: StudyArticle[] = [];
+export const studyArticles: StudyArticle[] = [
+  {
+    slug: 'segtree-bit',
+    title: 'セグメント木とBITを理解する',
+    publishedAt: '2026-04-17',
+    description:
+      '区間クエリの基本データ構造であるセグメント木とBITを、AIと対話しながら理解した記録。',
+    tags: ['データ構造', 'セグメント木', 'BIT', '区間クエリ'],
+    pdfPath: '/study/competitive-programming/pdfs/segtree-bit-slides.pdf',
+  },
+];
 
 export const studyPageContent = {
   categoryTitle: '競技プログラミング勉強ノート',
