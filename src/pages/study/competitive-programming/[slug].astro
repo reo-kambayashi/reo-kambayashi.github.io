@@ -1,0 +1,24 @@
+---
+import StudyLayout from '../../../layouts/StudyLayout.astro';
+import StudyArticleSection from '../../../components/sections/StudyArticleSection.astro';
+import { studyArticles, studyPageContent } from '../../../data/studyArticles';
+import type { StudyArticle } from '../../../data/types';
+
+export function getStaticPaths() {
+  return studyArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+type Props = {
+  article: StudyArticle;
+};
+
+const { article } = Astro.props as Props;
+const title = `${article.title} | ${studyPageContent.categoryTitle}`;
+const description = article.description || studyPageContent.siteDescription;
+---
+<StudyLayout title={title} description={description} activePath="article">
+  <StudyArticleSection article={article} />
+</StudyLayout>
