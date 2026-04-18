@@ -2,6 +2,15 @@ import type { StudyArticle } from './types';
 
 export const studyArticles: StudyArticle[] = [
   {
+    slug: 'abc454-e-lrud-moving',
+    title: 'ABC454 E — LRUD Moving',
+    publishedAt: '2026-04-18',
+    description:
+      '市松模様の議論で必要条件を導き、再帰的な構成法でハミルトンパスを作る',
+    tags: ['AtCoder', 'ABC', '構築', 'ハミルトンパス', '市松模様'],
+    pdfPath: '/study/competitive-programming/pdfs/abc454-e-slides.pdf',
+  },
+  {
     slug: 'segtree-bit',
     title: 'セグメント木とBITを理解する',
     publishedAt: '2026-04-17',
