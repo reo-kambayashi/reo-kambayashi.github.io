@@ -2,6 +2,15 @@ import type { StudyArticle } from './types';
 
 export const studyArticles: StudyArticle[] = [
   {
+    slug: 'dp-pattern-recognition',
+    title: '競プロDP発想ガイド — どういうときにDPを使うのか',
+    publishedAt: '2026-04-18',
+    description:
+      'DPを「知っている」から「見抜ける」へ。全探索→メモ化→DPの3ステップ、状態設計の核心、制約からパターンを逆算する方法まで',
+    tags: ['DP', '動的計画法', '発想法', '競技プログラミング', 'アルゴリズム'],
+    pdfPath: '/study/competitive-programming/pdfs/dp-pattern-recognition-slides.pdf',
+  },
+  {
     slug: 'abc454-e-lrud-moving',
     title: 'ABC454 E — LRUD Moving',
     publishedAt: '2026-04-18',
