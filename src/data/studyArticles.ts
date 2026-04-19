@@ -2,6 +2,15 @@ import type { StudyArticle } from './types';
 
 export const studyArticles: StudyArticle[] = [
   {
+    slug: 'typical90-019-pick-two',
+    title: '競プロ典型90問 019 — Pick Two',
+    publishedAt: '2026-04-19',
+    description:
+      '「最後に取り除くペアは誰か」と逆向きに問い直すと、操作順の爆発が区間DPへ畳まれる。最適部分構造の直感まで',
+    tags: ['競プロ典型90問', '区間DP', '動的計画法', 'AtCoder', '競技プログラミング'],
+    pdfPath: '/study/competitive-programming/pdfs/019-pick-two-slides.pdf',
+  },
+  {
     slug: 'dp-pattern-recognition',
     title: '競プロDP発想ガイド — どういうときにDPを使うのか',
     publishedAt: '2026-04-18',
