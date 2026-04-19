@@ -4,9 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "pdf:svg": "node scripts/pdf-to-svg.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/pdf-to-svg.mjs",
     "build": "astro build",
     "preview": "astro preview"
   },
