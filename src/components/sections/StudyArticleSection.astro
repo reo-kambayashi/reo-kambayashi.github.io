@@ -1,6 +1,4 @@
 ---
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
 import type { StudyArticle } from '../../data/types';
 import {
   formatPublishedDate,
@@ -16,18 +14,6 @@ const { article } = Astro.props as Props;
 const basePath = import.meta.env.BASE_URL;
 const pdfHref = resolveAssetPath(basePath, article.pdfPath);
 const listPath = `${basePath.replace(/\/$/, '')}/study/competitive-programming`;
-
-const svgDirPath = article.pdfPath.replace(/\.pdf$/, '-svg');
-const svgAbsDir = join(process.cwd(), 'public', svgDirPath);
-let svgPages: string[] = [];
-try {
-  svgPages = readdirSync(svgAbsDir)
-    .filter((f) => f.endsWith('.svg'))
-    .sort()
-    .map((f) => resolveAssetPath(basePath, `${svgDirPath}/${f}`));
-} catch {
-  svgPages = [];
-}
 ---
 <section aria-labelledby="study-article-heading">
   <header class="article-header">
@@ -49,22 +35,12 @@ try {
     {article.description && <p class="description">{article.description}</p>}
   </header>
 
-  <div class="pdf-pages" aria-label={article.title}>
-    {svgPages.length > 0 ? (
-      svgPages.map((src, i) => (
-        <img
-          class="pdf-page"
-          src={src}
-          alt={`${article.title} - page ${i + 1}`}
-          loading={i < 2 ? 'eager' : 'lazy'}
-          decoding="async"
-        />
-      ))
-    ) : (
+  <div class="pdf-viewer" aria-label={article.title}>
+    <object class="pdf-frame" data={pdfHref} type="application/pdf">
       <p class="pdf-status">
-        スライドを表示できません。<a href={pdfHref} target="_blank" rel="noopener">PDF を開く</a>。
+        このブラウザではPDFを埋め込み表示できません。<a href={pdfHref} target="_blank" rel="noopener">PDF を開く</a>。
       </p>
-    )}
+    </object>
   </div>
 
   <div class="article-actions">
@@ -125,19 +101,17 @@ try {
     line-break: strict;
   }
 
-  .pdf-pages {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  .pdf-viewer {
     width: 100%;
   }
 
-  .pdf-pages .pdf-page {
+  .pdf-frame {
     width: 100%;
-    height: auto;
+    height: min(90vh, 1200px);
     display: block;
     background: var(--surface-soft);
     box-shadow: var(--shadow-sm);
+    border: 0;
   }
 
   .pdf-status {
